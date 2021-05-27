@@ -11,6 +11,8 @@ import com.iot.device.entity.Device;
  */
 public interface DeviceService {
 
-  boolean updateDeviceStatus(Device param);
+    boolean updateDevice(Device param);
+
+    Integer saveDevice(Device param);
 
 }

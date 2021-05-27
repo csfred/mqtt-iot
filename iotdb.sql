@@ -24,7 +24,7 @@ CREATE TABLE `t_device` (
   `F_devId` int(4) NOT NULL,
   `F_devNo` int(4) NOT NULL,
   `F_type` int(4) NOT NULL,
-  `F_ver` varchar(100) DEFAULT NULL,
+  `F_version` varchar(100) DEFAULT NULL,
   `F_time` timestamp NULL DEFAULT NULL,
   `F_varList` text NOT NULL,
   KEY `idx_1` (`F_cmdId`,`F_devId`,`F_type`,`F_ver`) USING BTREE

@@ -17,11 +17,16 @@ import javax.annotation.Resource;
 @Service
 public class DeviceServiceImpl implements DeviceService {
 
-  @Resource
-  private DeviceMapper deviceMapper;
+    @Resource
+    private DeviceMapper deviceMapper;
 
-  @Override
-  public boolean updateDeviceStatus(Device param) {
-    return deviceMapper.updateDeviceStatus(param);
-  }
+    @Override
+    public boolean updateDevice(Device param) {
+        return deviceMapper.updateDevice(param);
+    }
+
+    @Override
+    public Integer saveDevice(Device param) {
+        return deviceMapper.saveDevice(param);
+    }
 }

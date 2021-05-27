@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DeviceMapper {
 
-  boolean updateDeviceStatus(Device param);
+    boolean updateDevice(Device param);
+
+    Integer saveDevice(Device param);
 
 }

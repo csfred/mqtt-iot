@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
-  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.iot.device.mapper.DeviceMapper">
 
-  <insert id="updateDeviceStatus" parameterType="com.iot.device.entity.Device">
-    insert into t_device
-    values (#{deviceName}, #{varList})
-  </insert>
+    <insert id="saveDevice" parameterType="com.iot.device.entity.Device">
+        insert into t_device(F_cmdId, F_devId, F_devNo, F_type, F_version, F_time, F_varList)
+        values (#{cmdId}, #{devId}, #{devNo}, #{type}, #{version}, #{varList}, #{time})
+    </insert>
 
 </mapper>
