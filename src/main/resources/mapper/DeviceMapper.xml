@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.iot.device.mapper.DeviceMapper">
+<mapper namespace="com.lot.device.mapper.DeviceMapper">
 
-    <insert id="saveDevice" parameterType="com.iot.device.entity.Device">
-        insert into t_device(F_cmdId, F_devId, F_devNo, F_type, F_version, F_time, F_varList)
-        values (#{cmdId}, #{devId}, #{devNo}, #{type}, #{version}, #{varList}, #{time})
+    <insert id="saveDevice" parameterType="com.lot.device.entity.Device">
+        insert into t_device(f_cmdId, f_devId, f_devNo, f_type, f_version, f_md5)
+        values (#{cmdId}, #{devId}, #{devNo}, #{type}, #{version}, #{md5})
+    </insert>
+
+    <select id="checkDeviceMd5Exist" parameterType="java.lang.String" resultType="java.lang.Long">
+        select count(1) as total from t_device
+         where f_md5 = #{md5}
+    </select>
+
+    <insert id="saveDeviceExt" parameterType="com.lot.device.entity.DeviceExt">
+        insert into t_device_ext(f_device_md5, f_var_list, f_var_list_md5)
+        values (#{deviceMd5}, #{varList}, #{varListMd5})
+    </insert>
+
+    <select id="checkVarListMd5Exist" parameterType="java.lang.String" resultType="java.lang.Long">
+        select count(1) as total from t_device_ext
+         where f_var_list_md5 = #{varListMd5}
+    </select>
+
+    <insert id="saveDeviceExt2" parameterType="com.lot.device.entity.DeviceExt2">
+        insert into t_device_ext2(f_receive_time, f_var_list_md5)
+        values (#{receiveTime}, #{varListMd5})
     </insert>
 
 </mapper>

@@ -1,7 +1,6 @@
-package com.iot.device.entity;
+package com.lot.device.entity;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -27,8 +26,6 @@ public class Device implements Serializable {
 
     private String version;
 
-    private String varList;
-
-    private Timestamp time;
+    private String md5;
 
 }
