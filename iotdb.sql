@@ -20,21 +20,29 @@ SET FOREIGN_KEY_CHECKS=0;
 -- ----------------------------
 DROP TABLE IF EXISTS `t_device`;
 CREATE TABLE `t_device` (
+  `f_md5` varchar(255) NOT NULL,
   `f_cmdId` int(4) NOT NULL,
   `f_devId` int(4) NOT NULL,
   `f_devNo` int(4) NOT NULL,
   `f_type` int(4) NOT NULL,
   `f_version` varchar(100) NOT NULL,
-  `f_md5` varchar(255) NOT NULL
-  KEY `idx_1` (`f_cmdId`,`f_devId`,`f_type`,`f_version`) USING HASH
-  KEY `f_md5` (`f_md5`) USING BTREE
+  PRIMARY KEY (`f_md5`),
+  KEY `idx_1` (`f_cmdId`,`f_devId`,`f_type`,`f_version`) USING BTREE,
+  KEY `f_md5` (`f_md5`) USING HASH
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `t_device_ext`;
 CREATE TABLE `t_device_ext` (
   `f_device_md5` varchar(255) NOT NULL,
-  `f_receive_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `f_var_list` varchar(500) NOT NULL,
+  `f_var_list_md5` varchar(255) NOT NULL,
+  PRIMARY KEY (`f_device_md5`,`f_var_list_md5`),
   KEY `idx1` (`f_device_md5`) USING HASH
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
+
+DROP TABLE IF EXISTS `t_device_ext2`;
+CREATE TABLE `t_device_ext2` (
+  `f_var_list_md5` varchar(255) NOT NULL,
+  `f_receive_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
