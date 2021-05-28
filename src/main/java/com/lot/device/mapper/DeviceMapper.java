@@ -3,6 +3,7 @@ package com.lot.device.mapper;
 import com.lot.device.entity.Device;
 import com.lot.device.entity.DeviceExt;
 import com.lot.device.entity.DeviceExt2;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
  * @title: DeviceMapper
  * @since 2020/11/17 15:56
  */
+@Mapper
 @Repository
 public interface DeviceMapper {
 
@@ -33,6 +35,7 @@ public interface DeviceMapper {
 
     /**
      * 检测是否存在
+     *
      * @param md5
      * @return
      */
@@ -40,12 +43,14 @@ public interface DeviceMapper {
 
     /**
      * 存储设备扩展信息
+     *
      * @param param 参数
      */
     void saveDeviceExt(DeviceExt param);
 
     /**
      * 检查VarList是否相同
+     *
      * @param varListMd5
      * @return
      */
@@ -53,6 +58,7 @@ public interface DeviceMapper {
 
     /**
      * 存储扩展信息2
+     *
      * @param param 参数
      */
     void saveDeviceExt2(DeviceExt2 param);
