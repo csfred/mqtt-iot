@@ -3,6 +3,7 @@ package com.lot.device.mapper;
 import com.lot.device.entity.Device;
 import com.lot.device.entity.DeviceExt;
 import com.lot.device.entity.DeviceExt2;
+import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Repository;
  * @title: DeviceMapper
  * @since 2020/11/17 15:56
  */
+@Mapper
 @Repository
 public interface DeviceMapper {
 
