@@ -16,8 +16,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * MQTT回调函数
@@ -91,12 +89,13 @@ public class InitCallback implements MqttCallback {
 
     private void saveDevice(JSONObject jsonObject) {
         Device device = new Device();
+        String stationNo = jsonObject.getString("stationNo");
         device.setCmdId(jsonObject.getInteger("cmdId"));
         device.setDevId(jsonObject.getInteger("devId"));
         device.setDevNo(jsonObject.getInteger("devNo"));
         device.setType(jsonObject.getInteger("type"));
         device.setVersion(jsonObject.getString("ver"));
-        device.setStationNo(jsonObject.getString("stationNo"));
+        device.setStationNo(stationNo);
 
         String originStringBuilder = String.valueOf(device.getCmdId()) + device.getDevId() +
                 device.getDevNo() + device.getType() +
@@ -117,7 +116,7 @@ public class InitCallback implements MqttCallback {
 
         log.info("DEVICE MSG={}", jsonObject.toJSONString());
 
-        if (deviceService.checkDeviceMd5Exist(deviceMd5) == 0L) {
+        if (deviceService.checkDeviceMd5Exist(deviceMd5, stationNo) == 0L) {
             deviceService.saveDevice(device);
         }
         if (deviceService.checkVarListMd5Exist(varListMd5) == 0L) {
