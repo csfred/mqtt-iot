@@ -34,7 +34,7 @@ public interface DeviceService {
      * @param md5 参数
      * @return total
      */
-    Long checkDeviceMd5Exist(String md5);
+    Long checkDeviceMd5Exist(String md5, String stationNo);
 
     /**
      * 存储设备扩展信息

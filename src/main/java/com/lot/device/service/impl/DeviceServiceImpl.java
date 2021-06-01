@@ -33,8 +33,8 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public Long checkDeviceMd5Exist(String md5) {
-        return deviceMapper.checkDeviceMd5Exist(md5);
+    public Long checkDeviceMd5Exist(String md5, String stationNo) {
+        return deviceMapper.checkDeviceMd5Exist(md5,stationNo);
     }
 
     @Override

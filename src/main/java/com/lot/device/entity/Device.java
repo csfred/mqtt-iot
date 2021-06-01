@@ -26,6 +26,8 @@ public class Device implements Serializable {
 
     private String version;
 
+    private String stationNo;
+
     private String md5;
 
 }

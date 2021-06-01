@@ -16,6 +16,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * MQTT回调函数
@@ -26,6 +28,9 @@ import java.sql.Timestamp;
 @Slf4j
 @Component
 public class InitCallback implements MqttCallback {
+
+    private static final String TOPIC_START_STR = "/sys/";
+    private static final String TOPIC_END_STR = "/up";
 
     @Resource
     private DeviceService deviceService;
@@ -53,10 +58,16 @@ public class InitCallback implements MqttCallback {
         //log.info("[{}] : {}", topic, new String(message.getPayload()));
         try {
             String msg = new String(message.getPayload());
+            if (!topic.startsWith(TOPIC_START_STR) || !topic.endsWith(TOPIC_END_STR)) {
+                return;
+            }
+            String stationNo = topic.substring(TOPIC_START_STR.length(),
+                    topic.indexOf(TOPIC_END_STR));
             JSONObject jsonObject = JSON.parseObject(msg);
             if (null == jsonObject || jsonObject.isEmpty()) {
                 return;
             }
+            jsonObject.put("stationNo", stationNo);
             if (jsonObject.containsKey("gwSn")) {
                 //站点信息
             }
@@ -85,6 +96,7 @@ public class InitCallback implements MqttCallback {
         device.setDevNo(jsonObject.getInteger("devNo"));
         device.setType(jsonObject.getInteger("type"));
         device.setVersion(jsonObject.getString("ver"));
+        device.setStationNo(jsonObject.getString("stationNo"));
 
         String originStringBuilder = String.valueOf(device.getCmdId()) + device.getDevId() +
                 device.getDevNo() + device.getType() +

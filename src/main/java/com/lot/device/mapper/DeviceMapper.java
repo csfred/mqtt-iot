@@ -33,19 +33,24 @@ public interface DeviceMapper {
 
     /**
      * 检测是否存在
+     *
      * @param md5
+     * @param stationNo
      * @return
      */
-    Long checkDeviceMd5Exist(@Param("md5") String md5);
+    Long checkDeviceMd5Exist(@Param("md5") String md5,
+                             @Param("stationNo") String stationNo);
 
     /**
      * 存储设备扩展信息
+     *
      * @param param 参数
      */
     void saveDeviceExt(DeviceExt param);
 
     /**
      * 检查VarList是否相同
+     *
      * @param varListMd5
      * @return
      */
@@ -53,6 +58,7 @@ public interface DeviceMapper {
 
     /**
      * 存储扩展信息2
+     *
      * @param param 参数
      */
     void saveDeviceExt2(DeviceExt2 param);

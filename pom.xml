@@ -9,7 +9,7 @@
     <version>2.2.1.RELEASE</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
-  <groupId>com.iot</groupId>
+  <groupId>com.lot</groupId>
   <artifactId>AM</artifactId>
   <version>1.0.0</version>
   <name>AM</name>
