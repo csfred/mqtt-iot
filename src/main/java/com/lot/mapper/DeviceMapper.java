@@ -1,8 +1,8 @@
-package com.lot.device.mapper;
+package com.lot.mapper;
 
-import com.lot.device.entity.Device;
-import com.lot.device.entity.DeviceExt;
-import com.lot.device.entity.DeviceExt2;
+import com.lot.entity.Device;
+import com.lot.entity.DeviceExt;
+import com.lot.entity.DeviceExt2;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -49,6 +49,14 @@ public interface DeviceMapper {
      * @param param 参数
      */
     void saveDeviceExt(DeviceExt param);
+
+    /**
+     * 更新设备EXT
+     *
+     * @param param
+     */
+    void updateDeviceExt(DeviceExt param);
+
 
     /**
      * 检查VarList是否相同

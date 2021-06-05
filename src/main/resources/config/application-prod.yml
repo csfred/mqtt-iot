@@ -8,9 +8,6 @@ spring:
     username: root
     password: 123456
 
-server:
-  port: 8084
-
 mqtt:
   host: tcp://8.140.106.126:1883
   username: root

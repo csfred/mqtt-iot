@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lot.device.mapper.DeviceMapper">
+<mapper namespace="com.lot.mapper.DeviceMapper">
 
-    <insert id="saveDevice" parameterType="com.lot.device.entity.Device">
+    <insert id="saveDevice" parameterType="com.lot.entity.Device">
         insert into t_device(f_cmdId, f_devId, f_devNo, f_type, f_version, f_stationNo, f_md5)
         values (#{cmdId}, #{devId}, #{devNo}, #{type}, #{version}, #{stationNo}, #{md5})
     </insert>
@@ -14,17 +14,23 @@
          and f_stationNo = #{stationNo}
     </select>
 
-    <insert id="saveDeviceExt" parameterType="com.lot.device.entity.DeviceExt">
-        insert into t_device_ext(f_device_md5, f_var_list, f_var_list_md5)
-        values (#{deviceMd5}, #{varList}, #{varListMd5})
+    <insert id="saveDeviceExt" parameterType="com.lot.entity.DeviceExt">
+        insert into t_device_ext(f_device_md5, f_var_list, f_var_list_md5, f_var_fields, f_var_fields_md5)
+        values (#{deviceMd5}, #{varList}, #{varListMd5}, #{varFields}, #{varFieldsMd5})
     </insert>
+
+    <update id="updateDeviceExt" parameterType="com.lot.entity.DeviceExt">
+        update t_device_ext set f_var_fields = #{varFields}, f_var_fields_md5 = #{varFieldsMd5}
+        where f_device_md5 = #{deviceMd5} and f_var_list_md5 = #{varListMd5}
+        and (f_var_fields = '' or f_var_fields is null )
+    </update>
 
     <select id="checkVarListMd5Exist" parameterType="java.lang.String" resultType="java.lang.Long">
         select count(1) as total from t_device_ext
          where f_var_list_md5 = #{varListMd5}
     </select>
 
-    <insert id="saveDeviceExt2" parameterType="com.lot.device.entity.DeviceExt2">
+    <insert id="saveDeviceExt2" parameterType="com.lot.entity.DeviceExt2">
         insert into t_device_ext2(f_receive_time, f_var_list_md5)
         values (#{receiveTime}, #{varListMd5})
     </insert>

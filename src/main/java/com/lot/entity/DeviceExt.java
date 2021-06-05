@@ -1,10 +1,9 @@
-package com.lot.device.entity;
+package com.lot.entity;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 /**
  * TODO
@@ -22,4 +21,8 @@ public class DeviceExt implements Serializable {
     private String varListMd5;
 
     private String varList;
+
+    private String varFields;
+
+    private String varFieldsMd5;
 }

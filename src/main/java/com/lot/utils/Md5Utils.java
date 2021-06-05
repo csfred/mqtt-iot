@@ -7,11 +7,13 @@ import java.security.NoSuchAlgorithmException;
  * @author cs
  */
 public class Md5Utils {
+    private static final String MD5_KEY = "md5";
+
     public static String md5(String text) {
         MessageDigest digest;
         try {
             // 创建加密对象 调用加密对象的方法，加密的动作已经完成
-            digest = MessageDigest.getInstance("md5");
+            digest = MessageDigest.getInstance(MD5_KEY);
             // 接下来，我们要对加密后的结果，进行优化，按照mysql的优化思路走
             byte[] result = digest.digest(text.getBytes());
             // mysql的优化思路：

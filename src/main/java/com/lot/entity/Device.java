@@ -1,4 +1,4 @@
-package com.lot.device.entity;
+package com.lot.entity;
 
 import java.io.Serializable;
 

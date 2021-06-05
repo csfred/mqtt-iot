@@ -1,8 +1,8 @@
-package com.lot.device.service;
+package com.lot.service;
 
-import com.lot.device.entity.Device;
-import com.lot.device.entity.DeviceExt;
-import com.lot.device.entity.DeviceExt2;
+import com.lot.entity.Device;
+import com.lot.entity.DeviceExt;
+import com.lot.entity.DeviceExt2;
 
 /**
  * TODO
@@ -42,6 +42,13 @@ public interface DeviceService {
      * @param param 参数
      */
     void saveDeviceExt(DeviceExt param);
+
+    /**
+     * Ext更新
+     * @param param 参数
+     */
+    void updateDeviceExt(DeviceExt param);
+
 
     /**
      * 检查varListMd5是否存在

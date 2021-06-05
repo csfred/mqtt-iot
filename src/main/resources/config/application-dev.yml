@@ -7,9 +7,6 @@ spring:
 #    username: dhub_dev
 #    password: 123456
 
-server:
-  port: 8082
-
 mqtt:
   host: tcp://8.140.106.126:1883
   username: root

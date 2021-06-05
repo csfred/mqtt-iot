@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lot.mapper.ReportMapper">
+
+    <select id="getReportFieldsEntry" parameterType="java.lang.String"
+            resultType="com.lot.entity.ReportFieldsEntity">
+        select f_dev_no as devNo, f_dev_name as devName, f_dev_type as devType,
+         f_dev_var_fields as devVarFields, f_dev_var_fields_md5 as devVarFieldMd5 from t_device_info
+         where f_station_no = #{stationNo}
+    </select>
+
+    <select id="getReportContentEntryList" parameterType="java.lang.String"
+            resultType="com.lot.entity.ReportContentEntity">
+        select t1.f_var_list as varList, t1.f_var_fields_md5 as varFieldMd5, t2.f_receive_time as receiveTime,
+         from t_device_ext t1,
+              t_device_ext2 t2,
+              t_device_info t3
+         where t3.f_station_no = #{stationNo}
+         and t3.f_dev_type = #{devType}
+         and t3.f_dev_name = #{devName}
+         and t2.f_receive_time between #{startTime} and #{endTime}
+         and t1.f_var_list_md5 = t2.f_var_list_md5
+         and t1.f_var_fields_md5 = t3.f_dev_var_fields_md5
+    </select>
+
+</mapper>
