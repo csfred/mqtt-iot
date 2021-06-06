@@ -9,16 +9,14 @@ import java.sql.Timestamp;
 /**
  * TODO
  *
- * @author Mr.Qu
- * @title: Device
- * @since 2020/11/17 15:42
+ * @author cs
+ * @since 2021/06/03
  */
 @Data
 @Accessors(chain = true)
-public class DeviceExt2 implements Serializable {
+public class DeviceType implements Serializable {
 
-    private String varListMd5;
+    private Integer id;
 
-    private Timestamp receiveTime;
-
+    private String devTypeName;
 }

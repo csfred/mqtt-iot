@@ -1,25 +1,18 @@
 package com.lot.service;
 
 import com.lot.entity.Device;
-import com.lot.entity.DeviceExt;
-import com.lot.entity.DeviceExt2;
+import com.lot.entity.DeviceInfo;
+
+import java.util.List;
 
 /**
  * TODO
  *
- * @author Mr.Qu
- * @title: DeviceService
+ * @author cs
  * @since 2020/11/17 15:35
  */
 public interface DeviceService {
 
-    /**
-     * 更新主设备
-     *
-     * @param param 参数
-     * @return
-     */
-    boolean updateDevice(Device param);
 
     /**
      * 存储设备主信息
@@ -28,40 +21,42 @@ public interface DeviceService {
      */
     void saveDevice(Device param);
 
-    /**
-     * 检测是否存在
-     *
-     * @param md5 参数
-     * @return total
-     */
-    Long checkDeviceMd5Exist(String md5, String stationNo);
 
     /**
-     * 存储设备扩展信息
+     * 更新相同站点相同设备参数计数
      *
-     * @param param 参数
+     * @param endReceiveTime   最后接收时间
+     * @param stationNo        站点编号
+     * @param varListFieldsMd5 参数变量值MD5
      */
-    void saveDeviceExt(DeviceExt param);
-
-    /**
-     * Ext更新
-     * @param param 参数
-     */
-    void updateDeviceExt(DeviceExt param);
+    void updateSameDeviceCounter(String endReceiveTime,
+                                 String stationNo,
+                                 String varListFieldsMd5);
 
 
     /**
      * 检查varListMd5是否存在
      *
-     * @param varListMd5
+     * @param stationNo
+     * @param varListFieldsMd5
      * @return total
      */
-    Long checkVarListMd5Exist(String varListMd5);
+    Long checkDeviceExist(String stationNo, String varListFieldsMd5);
+
 
     /**
-     * 存储扩展信息2
-     * @param param 参数
+     * 获取站点下所有设备种类信息
+     *
+     * @param stationNo 站点
+     * @return List
      */
-    void saveDeviceExt2(DeviceExt2 param);
+    List<DeviceInfo> getDeviceInfoAll(String stationNo);
+
+    /**
+     * 获取扩展表数据
+     *
+     * @return list
+     */
+    List<Device> getDeviceAll();
 
 }

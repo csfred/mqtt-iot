@@ -1,77 +1,67 @@
 package com.lot.mapper;
 
 import com.lot.entity.Device;
-import com.lot.entity.DeviceExt;
-import com.lot.entity.DeviceExt2;
+import com.lot.entity.DeviceInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * TODO
  *
- * @author Mr.Qu
- * @title: DeviceMapper
+ * @author cs
  * @since 2020/11/17 15:56
  */
 @Mapper
 @Repository
 public interface DeviceMapper {
 
-    /**
-     * 更新主设备信息
-     *
-     * @param param 参数
-     * @return
-     */
-    boolean updateDevice(Device param);
 
     /**
-     * 存储设备主信息
+     * 保存设备信息
      *
      * @param param 参数
      */
     void saveDevice(Device param);
 
-    /**
-     * 检测是否存在
-     *
-     * @param md5
-     * @param stationNo
-     * @return
-     */
-    Long checkDeviceMd5Exist(@Param("md5") String md5,
-                             @Param("stationNo") String stationNo);
 
     /**
-     * 存储设备扩展信息
+     * 更新相同站点相同设备参数计数
      *
-     * @param param 参数
+     * @param endReceiveTime   最后接收时间
+     * @param stationNo        站点编号
+     * @param varListFieldsMd5 参数变量值MD5
      */
-    void saveDeviceExt(DeviceExt param);
 
-    /**
-     * 更新设备EXT
-     *
-     * @param param
-     */
-    void updateDeviceExt(DeviceExt param);
+    void updateSameDeviceCounter(@Param("endReceiveTime") String endReceiveTime,
+                                 @Param("stationNo") String stationNo,
+                                 @Param("varListFieldsMd5") String varListFieldsMd5);
 
 
     /**
      * 检查VarList是否相同
      *
-     * @param varListMd5
+     * @param varList4FieldsMd5 参数，值 MD5
+     * @param stationNo         站点编号
      * @return
      */
-    Long checkVarListMd5Exist(@Param("varListMd5") String varListMd5);
+    Long checkDeviceExist(@Param("stationNo") String stationNo,
+                          @Param("varList4FieldsMd5") String varList4FieldsMd5);
 
     /**
-     * 存储扩展信息2
+     * 获取站点下所有设备种类信息
      *
-     * @param param 参数
+     * @param stationNo 站点
+     * @return List
      */
-    void saveDeviceExt2(DeviceExt2 param);
+    List<DeviceInfo> getDeviceInfoAll(@Param("stationNo") String stationNo);
 
-
+    /**
+     * 获取扩展表数据
+     *
+     * @return list
+     */
+    List<Device> getDeviceAll();
 }

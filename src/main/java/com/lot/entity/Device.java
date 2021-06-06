@@ -1,33 +1,32 @@
 package com.lot.entity;
 
-import java.io.Serializable;
-
 import lombok.Data;
 import lombok.experimental.Accessors;
+
+import java.io.Serializable;
+import java.sql.Timestamp;
 
 /**
  * TODO
  *
- * @author Mr.Qu
- * @title: Device
- * @since 2020/11/17 15:42
+ * @author cs
+ * @since 2021/06/03
  */
 @Data
 @Accessors(chain = true)
 public class Device implements Serializable {
 
-    private Integer cmdId;
-
-    private Integer devId;
-
-    private Integer devNo;
-
-    private Integer type;
-
-    private String version;
+    private long devNo;
 
     private String stationNo;
 
-    private String md5;
+    private String varListFields;
 
+    private String varListFieldsMd5;
+
+    private Timestamp startReceiveTime;
+
+    private Timestamp endReceiveTime;
+
+    private Integer receiveCount;
 }

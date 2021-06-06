@@ -3,10 +3,7 @@ package com.lot.mqtt;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.lot.entity.Constants;
-import com.lot.entity.Device;
-import com.lot.entity.DeviceExt;
-import com.lot.entity.DeviceExt2;
+import com.lot.entity.*;
 import com.lot.service.DeviceService;
 import com.lot.utils.Md5Utils;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +11,6 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -33,6 +29,8 @@ public class InitCallback implements MqttCallback {
 
     @Resource
     private DeviceService deviceService;
+
+    private List<DeviceInfo> deviceInfoList = null;
 
     /**
      * MQTT 断开连接会执行此方法
@@ -67,6 +65,7 @@ public class InitCallback implements MqttCallback {
             if (null == jsonObject || jsonObject.isEmpty()) {
                 return;
             }
+            deviceInfoList = deviceService.getDeviceInfoAll(stationNo);
             jsonObject.put(Constants.STATION_NO_KEY, stationNo);
             if (jsonObject.containsKey(Constants.MSG_GATEWAY_SN_KEY)) {
                 //站点信息
@@ -76,7 +75,7 @@ public class InitCallback implements MqttCallback {
             }
             if (jsonObject.containsKey(Constants.MSG_VAR_LIST)) {
                 //设备信息
-                saveDevice(jsonObject);
+                //saveDevice(jsonObject);
             }
             String clientId = String.valueOf(jsonObject.get(Constants.MSG_CLIENT_ID));
             if (!StringUtils.isEmpty(clientId) && !Constants.NULL_STR.equals(clientId)) {
@@ -92,61 +91,64 @@ public class InitCallback implements MqttCallback {
         }
     }
 
-    private void saveDevice(JSONObject jsonObject) {
-        Device device = new Device();
-        String stationNo = jsonObject.getString(Constants.STATION_NO_KEY);
-        device.setCmdId(jsonObject.getInteger(Constants.MSG_CMD_ID));
-        device.setDevId(jsonObject.getInteger(Constants.MSG_DEV_ID));
-        device.setDevNo(jsonObject.getInteger(Constants.MSG_DEV_NO));
-        device.setType(jsonObject.getInteger(Constants.MSG_TYPE));
-        device.setVersion(jsonObject.getString(Constants.MSG_VERSION));
-        device.setStationNo(stationNo);
-
-        String originStringBuilder = String.valueOf(device.getCmdId()) +
-                device.getDevId() + device.getDevNo() +
-                device.getType() + device.getVersion();
-        String deviceMd5 = Md5Utils.md5(originStringBuilder);
-        device.setMd5(deviceMd5);
-
-        String varList = jsonObject.getString(Constants.MSG_VAR_LIST);
-        DeviceExt deviceExt = new DeviceExt();
-        String varListMd5 = Md5Utils.md5(varList);
-        List<String> fieldList = new ArrayList<>(8);
-        JSONObject varListObject = JSON.parseObject(varList);
+    private List<String> getAllVarFieldList(String varListJson) {
+        List<String> allFieldList = new ArrayList<>(8);
+        JSONObject varListObject = JSON.parseObject(varListJson);
         if (null != varListObject && !varListObject.isEmpty()) {
             for (Map.Entry entry : varListObject.entrySet()) {
                 if (null != entry.getKey()) {
                     String field = entry.getKey().toString();
-                    if (!fieldList.contains(field)) {
-                        fieldList.add(field);
+                    if (!allFieldList.contains(field)) {
+                        allFieldList.add(field);
                     }
                 }
             }
-            if (!CollectionUtils.isEmpty(fieldList)) {
-                Collections.sort(fieldList);
+        }
+        return allFieldList;
+    }
+
+    private void saveDevice(JSONObject jsonObject) {
+        Device device = new Device();
+        String stationNo = jsonObject.getString(Constants.STATION_NO_KEY);
+        device.setStationNo(stationNo);
+
+        String varListJson = jsonObject.getString(Constants.MSG_VAR_LIST);
+        JSONObject varListObject = JSON.parseObject(varListJson);
+        if (null == varListObject || varListObject.isEmpty()) {
+            return;
+        }
+        List<String> allFieldList = getAllVarFieldList(varListJson);
+        for (DeviceInfo deviceInfo : deviceInfoList) {
+            List<String> deviceInfoFieldList = JSON.parseArray(deviceInfo.getDevVarFields(), String.class);
+            if (allFieldList.containsAll(deviceInfoFieldList)) {
+                JSONObject varList4FieldObject = new JSONObject(8);
+                for (String key : deviceInfoFieldList) {
+                    if (null != varListObject.get(key)) {
+                        varList4FieldObject.put(key, varListObject.get(key));
+                    }
+                }
+                String receiveTime = jsonObject.getString(Constants.MSG_TIME);
+                String varList4Fields = varList4FieldObject.toJSONString();
+                String varListFieldsMd5 = Md5Utils.md5(varList4FieldObject.toJSONString());
+                device.setDevNo(deviceInfo.getDevNo());
+                device.setVarListFields(varList4Fields);
+                device.setEndReceiveTime(Timestamp.valueOf(receiveTime));
+                device.setStartReceiveTime(Timestamp.valueOf(receiveTime));
+                boolean saveAble = deviceService.checkDeviceExist(stationNo, varListFieldsMd5) == 0L;
+                if (saveAble) {
+                    deviceService.saveDevice(device);
+                } else {
+                    deviceService.updateSameDeviceCounter(receiveTime, stationNo, varListFieldsMd5);
+                }
             }
         }
-        String varFieldList = JSON.toJSONString(fieldList);
-        deviceExt.setVarFieldsMd5(Md5Utils.md5(varFieldList));
-        deviceExt.setDeviceMd5(deviceMd5);
-        deviceExt.setVarListMd5(varListMd5);
-        deviceExt.setVarList(varList);
-        deviceExt.setVarFields(varFieldList);
+    }
 
-        DeviceExt2 deviceExt2 = new DeviceExt2();
-        deviceExt2.setVarListMd5(varListMd5);
-        deviceExt2.setReceiveTime(Timestamp.valueOf(
-                jsonObject.getString(Constants.MSG_TIME)));
-
-        if (deviceService.checkDeviceMd5Exist(deviceMd5, stationNo) == 0L) {
-            deviceService.saveDevice(device);
-        }
-        if (deviceService.checkVarListMd5Exist(varListMd5) == 0L) {
-            deviceService.saveDeviceExt(deviceExt);
-        } else {
-            deviceService.updateDeviceExt(deviceExt);
-        }
-
-        deviceService.saveDeviceExt2(deviceExt2);
+    public static void main(String[] args) {
+        String testStr = "[\"调节池液位\"]";
+        List<String> testList = JSON.parseArray(testStr, String.class);
+        Collections.sort(testList);
+        System.out.println(JSON.toJSONString(testList));
+        System.out.println(Md5Utils.md5(JSON.toJSONString(testList)));
     }
 }

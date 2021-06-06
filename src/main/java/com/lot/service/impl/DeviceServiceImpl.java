@@ -1,19 +1,19 @@
 package com.lot.service.impl;
 
 import com.lot.entity.Device;
-import com.lot.entity.DeviceExt;
-import com.lot.entity.DeviceExt2;
+import com.lot.entity.DeviceInfo;
 import com.lot.mapper.DeviceMapper;
 import com.lot.service.DeviceService;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * TODO
  *
- * @author Mr.Qu
- * @title: DeviceServiceImpl
+ * @author cs
  * @since 2020/11/17 15:55
  */
 @Service
@@ -22,38 +22,34 @@ public class DeviceServiceImpl implements DeviceService {
     @Resource
     private DeviceMapper deviceMapper;
 
-    @Override
-    public boolean updateDevice(Device param) {
-        return deviceMapper.updateDevice(param);
-    }
 
     @Override
     public void saveDevice(Device param) {
         deviceMapper.saveDevice(param);
     }
 
+
     @Override
-    public Long checkDeviceMd5Exist(String md5, String stationNo) {
-        return deviceMapper.checkDeviceMd5Exist(md5, stationNo);
+    public void updateSameDeviceCounter(String endReceiveTime,
+                                        String stationNo,
+                                        String varListFieldsMd5) {
+
+        deviceMapper.updateSameDeviceCounter(endReceiveTime, stationNo, varListFieldsMd5);
     }
 
     @Override
-    public void saveDeviceExt(DeviceExt param) {
-        deviceMapper.saveDeviceExt(param);
+    public Long checkDeviceExist(String stationNo, String varListFieldsMd5) {
+        return deviceMapper.checkDeviceExist(stationNo, varListFieldsMd5);
+    }
+
+
+    @Override
+    public List<DeviceInfo> getDeviceInfoAll(@Param("stationNo") String stationNo) {
+        return deviceMapper.getDeviceInfoAll(stationNo);
     }
 
     @Override
-    public void updateDeviceExt(DeviceExt param) {
-        deviceMapper.updateDeviceExt(param);
-    }
-
-    @Override
-    public Long checkVarListMd5Exist(String varListMd5) {
-        return deviceMapper.checkVarListMd5Exist(varListMd5);
-    }
-
-    @Override
-    public void saveDeviceExt2(DeviceExt2 param) {
-        deviceMapper.saveDeviceExt2(param);
+    public List<Device> getDeviceAll() {
+        return deviceMapper.getDeviceAll();
     }
 }

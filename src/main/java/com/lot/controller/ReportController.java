@@ -26,18 +26,20 @@ public class ReportController {
         return "Hello World";
     }
 
-    @RequestMapping("/getReportFields")
-    String getReportFieldsEntry(@RequestParam("stationNo") String stationNo) {
-        return JSON.toJSONString(reportService.getReportFieldsEntry(stationNo));
+    @RequestMapping("/getDeviceInfo")
+    String getDeviceInfo(@RequestParam("stationNo") String stationNo,
+                         @RequestParam("devName") String devName) {
+        return JSON.toJSONString(reportService.getDeviceInfo(stationNo, devName));
     }
 
     @RequestMapping("/getReportContent")
-    String getReportContentEntryList(@RequestParam("stationNo") String stationNo,
-                                     @RequestParam("devType") String devType,
-                                     @RequestParam("devName") String devName,
-                                     @RequestParam("startTime") String startTime,
-                                     @RequestParam("endTime") String endTime) {
+    String getReportContent(@RequestParam("stationNo") String stationNo,
+                            @RequestParam("devType") String devType,
+                            @RequestParam("devName") String devName,
+                            @RequestParam("startTime") String startTime,
+                            @RequestParam("endTime") String endTime,
+                            @RequestParam("timeIntervalId") Integer timeIntervalId) {
 
-        return JSON.toJSONString(reportService.getReportContentEntryList(stationNo, devType, devName, startTime, endTime));
+        return JSON.toJSONString(reportService.getReportContent(stationNo, devType, devName, startTime, endTime, timeIntervalId));
     }
 }

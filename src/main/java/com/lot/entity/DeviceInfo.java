@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 @Data
 @Accessors(chain = true)
-public class ReportFieldsEntity implements Serializable {
+public class DeviceInfo implements Serializable {
 
     private long devNo;
 
@@ -21,9 +21,7 @@ public class ReportFieldsEntity implements Serializable {
 
     private String devVarFields;
 
-    private String devVarFieldMd5;
-
     private String devName;
 
-    private String devType;
+    private Integer devType;
 }
