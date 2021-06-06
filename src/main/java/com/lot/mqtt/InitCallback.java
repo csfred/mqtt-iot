@@ -75,7 +75,7 @@ public class InitCallback implements MqttCallback {
             }
             if (jsonObject.containsKey(Constants.MSG_VAR_LIST)) {
                 //设备信息
-                //saveDevice(jsonObject);
+                saveDevice(jsonObject);
             }
             String clientId = String.valueOf(jsonObject.get(Constants.MSG_CLIENT_ID));
             if (!StringUtils.isEmpty(clientId) && !Constants.NULL_STR.equals(clientId)) {

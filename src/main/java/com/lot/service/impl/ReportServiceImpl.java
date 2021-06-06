@@ -55,61 +55,35 @@ public class ReportServiceImpl implements ReportService {
                 Integer receiveCount = reportContent.getReceiveCount();
                 ReportContent reportContentTmp;
                 Integer timeInterval = timeIntervalEntity.getTimeInterval();
-                switch (timeIntervalEntity.getUnit()) {
-                    //秒
-                    case 0:
-                        for (int idx = 0; idx < receiveCount; idx++) {
-                            reportContentTmp = ReportContent.copy(reportContent);
-                            LocalDateTime plusLocalDateTime = startReceiveTime.plusSeconds(idx * timeInterval);
-                            if(plusLocalDateTime.isAfter(endLocalDateTime)){
-                                break;
-                            }
-                            reportContentTmp.setTimePoint(plusLocalDateTime.format(DateTimeFormatter.ofPattern(
-                                    Constants.TIME_STAMP_FORMAT)));
-                            reportContentListRet.add(reportContentTmp);
-                        }
+                LocalDateTime plusLocalDateTime = null;
+                for (int idx = 0; idx < receiveCount; idx++) {
+                    reportContentTmp = ReportContent.copy(reportContent);
+                    switch (timeIntervalEntity.getUnit()) {
+                        //秒
+                        case 0:
+                            plusLocalDateTime = startReceiveTime.plusSeconds(idx * timeInterval);
+                            break;
+                        //分
+                        case 1:
+                            plusLocalDateTime = startReceiveTime.plusMinutes(idx * timeInterval);
+                            break;
+                        //时
+                        case 2:
+                            plusLocalDateTime = startReceiveTime.plusHours(idx * timeInterval);
+                            break;
+                        //天
+                        case 3:
+                            plusLocalDateTime = startReceiveTime.plusDays(idx * timeInterval);
+                            break;
+                        default:
+                            break;
+                    }
+                    if (null == plusLocalDateTime || plusLocalDateTime.isAfter(endLocalDateTime)) {
                         break;
-                    //分
-                    case 1:
-                        for (int idx = 0; idx < receiveCount; idx++) {
-                            reportContentTmp = ReportContent.copy(reportContent);
-                            LocalDateTime plusLocalDateTime = startReceiveTime.plusMinutes(idx * timeInterval);
-                            if(plusLocalDateTime.isAfter(endLocalDateTime)){
-                                break;
-                            }
-                            reportContentTmp.setTimePoint(plusLocalDateTime.format(DateTimeFormatter.ofPattern(
-                                    Constants.TIME_STAMP_FORMAT)));
-                            reportContentListRet.add(reportContentTmp);
-                        }
-                        break;
-                    //时
-                    case 2:
-                        for (int idx = 0; idx < receiveCount; idx++) {
-                            reportContentTmp = ReportContent.copy(reportContent);
-                            LocalDateTime plusLocalDateTime = startReceiveTime.plusHours(idx * timeInterval);
-                            if(plusLocalDateTime.isAfter(endLocalDateTime)){
-                                break;
-                            }
-                            reportContentTmp.setTimePoint(plusLocalDateTime.format(DateTimeFormatter.ofPattern(
-                                    Constants.TIME_STAMP_FORMAT)));
-                            reportContentListRet.add(reportContentTmp);
-                        }
-                        break;
-                    //天
-                    case 3:
-                        for (int idx = 0; idx < receiveCount; idx++) {
-                            reportContentTmp = ReportContent.copy(reportContent);
-                            LocalDateTime plusLocalDateTime = startReceiveTime.plusDays(idx * timeInterval);
-                            if(plusLocalDateTime.isAfter(endLocalDateTime)){
-                                break;
-                            }
-                            reportContentTmp.setTimePoint(plusLocalDateTime.format(DateTimeFormatter.ofPattern(
-                                    Constants.TIME_STAMP_FORMAT)));
-                            reportContentListRet.add(reportContentTmp);
-                        }
-                        break;
-                    default:
-                        break;
+                    }
+                    reportContentTmp.setTimePoint(plusLocalDateTime.format(DateTimeFormatter.ofPattern(
+                            Constants.TIME_STAMP_FORMAT)));
+                    reportContentListRet.add(reportContentTmp);
                 }
             }
         }
