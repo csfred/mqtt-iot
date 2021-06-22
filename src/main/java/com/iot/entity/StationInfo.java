@@ -26,6 +26,16 @@ public class StationInfo implements Serializable {
     private String stationName;
 
     /**
+     * 站点经度
+     */
+    private Double stationLon;
+
+    /**
+     * 站点纬度
+     */
+    private Double stationLat;
+
+    /**
      * 站点地址
      */
     private String stationAddress;

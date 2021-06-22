@@ -5,6 +5,7 @@ import com.iot.service.DeviceService;
 import com.iot.utils.Result;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
@@ -42,6 +43,18 @@ public class BaseController {
             return Result.error(e.getMessage());
         }
         return Result.success();
+    }
+
+    @RequestMapping("/getStationInfoByLonLat")
+    Result getStationInfoByLonLat(@RequestParam("stationLon") Double stationLon,
+                                  @RequestParam("stationLat") Double stationLat) {
+        Object data;
+        try {
+            data = deviceService.getStationInfoByLonLat(stationLon, stationLat);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+        return Result.success("请求成功", data);
     }
 
 }

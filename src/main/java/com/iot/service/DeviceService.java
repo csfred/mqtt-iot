@@ -23,6 +23,14 @@ public interface DeviceService {
     void saveStationInfo(StationInfo stationInfo);
 
     /**
+     * 根据经纬度获取站点信息集合
+     * @param stationLon
+     * @param stationLat
+     * @return
+     */
+    List<StationInfo> getStationInfoByLonLat(Double stationLon, Double stationLat);
+
+    /**
      * 存储设备主信息
      *
      * @param param 参数

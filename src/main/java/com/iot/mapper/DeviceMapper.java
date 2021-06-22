@@ -27,6 +27,15 @@ public interface DeviceMapper {
     void saveStationInfo(StationInfo stationInfo);
 
     /**
+     * 根据经纬度获取站点信息集合
+     * @param stationLon
+     * @param stationLat
+     * @return
+     */
+    List<StationInfo> getStationInfoByLonLat(@Param("stationLon") Double stationLon,
+                                             @Param("stationLat") Double stationLat);
+
+    /**
      * 保存设备信息
      *
      * @param param 参数

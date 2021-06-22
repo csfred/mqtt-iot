@@ -26,7 +26,12 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public void saveStationInfo(StationInfo stationInfo) {
+        deviceMapper.saveStationInfo(stationInfo);
+    }
 
+    @Override
+    public List<StationInfo> getStationInfoByLonLat(Double stationLon, Double stationLat) {
+        return deviceMapper.getStationInfoByLonLat(stationLon, stationLat);
     }
 
     @Override

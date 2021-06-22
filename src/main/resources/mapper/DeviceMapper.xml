@@ -4,12 +4,33 @@
 <mapper namespace="com.iot.mapper.DeviceMapper">
 
     <insert id="saveStationInfo" parameterType="com.iot.entity.StationInfo">
-        insert into t_station_info(f_station_no, f_station_name, f_station_address, f_process_tech,
+        insert into t_station_info(f_station_no, f_station_name, f_station_lon, f_station_lat, f_station_address,
+                                   f_process_tech,
                                    f_process_scale, f_dev_ops_num, f_contact_tel, f_bg_image_path,
                                    f_remarks1, f_remarks2, f_remarks3)
-        values (#{stationNo}, #{stationName}, #{stationAddress}, MD5(processTech), #{processScale}, #{devOpsNum},
+        values (#{stationNo}, #{stationName}, #{stationLon}, #{stationLat}, #{stationAddress}, #{processTech},
+                #{processScale}, #{devOpsNum},
                 #{connectTel}, #{bgImgPath}, #{remarks1}, #{remarks2}, #{remarks3})
     </insert>
+
+    <select id="getStationInfoByLonLat" parameterType="java.lang.Double" resultType="com.iot.entity.StationInfo">
+        select f_station_no      as stationNo,
+               f_station_name    as stationName,
+               f_station_lon     as stationLon,
+               f_station_lat     as stationLat,
+               f_station_address as stationAddress,
+               f_process_tech    as processTech,
+               f_process_scale   as processScale,
+               f_dev_ops_num     as devOpsNum,
+               f_contact_tel     as connectTel,
+               f_bg_image_path   as bgImgPath,
+               f_remarks1        as remarks1,
+               f_remarks2        as remarks2,
+               f_remarks3        as remarks3
+        from t_station_info
+        where f_station_lon &gt;= #{stationLon}
+          and f_station_lat &lt;= #{stationLat}
+    </select>
 
     <insert id="saveDevice" parameterType="com.iot.entity.Device">
         insert into t_device(f_station_no, f_dev_no, f_var_list_fields, f_var_list_fields_md5,
