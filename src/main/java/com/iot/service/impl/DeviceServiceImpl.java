@@ -1,9 +1,10 @@
-package com.lot.service.impl;
+package com.iot.service.impl;
 
-import com.lot.entity.Device;
-import com.lot.entity.DeviceInfo;
-import com.lot.mapper.DeviceMapper;
-import com.lot.service.DeviceService;
+import com.iot.entity.Device;
+import com.iot.entity.DeviceInfo;
+import com.iot.entity.StationInfo;
+import com.iot.mapper.DeviceMapper;
+import com.iot.service.DeviceService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,11 @@ public class DeviceServiceImpl implements DeviceService {
     @Resource
     private DeviceMapper deviceMapper;
 
+
+    @Override
+    public void saveStationInfo(StationInfo stationInfo) {
+
+    }
 
     @Override
     public void saveDevice(Device param) {

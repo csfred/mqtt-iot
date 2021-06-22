@@ -1,11 +1,11 @@
-package com.lot.service.impl;
+package com.iot.service.impl;
 
-import com.lot.entity.Constants;
-import com.lot.entity.ReportContent;
-import com.lot.entity.DeviceInfo;
-import com.lot.entity.TimeIntervalEntity;
-import com.lot.mapper.ReportMapper;
-import com.lot.service.ReportService;
+import com.iot.entity.Constants;
+import com.iot.entity.ReportContent;
+import com.iot.entity.DeviceInfo;
+import com.iot.entity.TimeIntervalEntity;
+import com.iot.mapper.ReportMapper;
+import com.iot.service.ReportService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 

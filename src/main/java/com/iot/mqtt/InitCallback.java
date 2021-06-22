@@ -1,11 +1,11 @@
-package com.lot.mqtt;
+package com.iot.mqtt;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.lot.entity.*;
-import com.lot.service.DeviceService;
-import com.lot.utils.Md5Utils;
+import com.iot.entity.*;
+import com.iot.service.DeviceService;
+import com.iot.utils.Md5Utils;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;

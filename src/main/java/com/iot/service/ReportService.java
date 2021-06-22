@@ -1,6 +1,6 @@
-package com.lot.service;
+package com.iot.service;
 
-import com.lot.entity.*;
+import com.iot.entity.*;
 
 import java.util.List;
 

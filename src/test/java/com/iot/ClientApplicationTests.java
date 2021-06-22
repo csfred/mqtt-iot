@@ -1,6 +1,6 @@
-package com.lot;
+package com.iot;
 
-import com.lot.service.DeviceService;
+import com.iot.service.DeviceService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

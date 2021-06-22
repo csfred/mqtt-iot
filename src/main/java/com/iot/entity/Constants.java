@@ -1,4 +1,4 @@
-package com.lot.entity;
+package com.iot.entity;
 
 /**
  * 常量定义

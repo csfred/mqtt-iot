@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lot.mapper.ReportMapper">
+<mapper namespace="com.iot.mapper.ReportMapper">
 
     <select id="getDeviceInfo" parameterType="java.lang.String"
-            resultType="com.lot.entity.DeviceInfo">
+            resultType="com.iot.entity.DeviceInfo">
         select f_dev_no as devNo, f_station_no as stationNo,
             f_dev_name as devName, f_dev_type as devType,
             f_dev_var_fields as devVarFields from t_device_info
@@ -14,7 +14,7 @@
     </select>
 
     <select id="getReportContent" parameterType="java.lang.String"
-            resultType="com.lot.entity.ReportContent">
+            resultType="com.iot.entity.ReportContent">
         select t1.f_var_list_fields as varList4Fields,
             t1.f_receive_count as receiveCount,
             t1.f_start_receive_time as startReceiveTime,
@@ -33,13 +33,13 @@
             and t1.f_end_receive_time &gt;= #{endTime}
     </select>
 
-    <select id="getTimeInterValInfo" resultType="com.lot.entity.TimeIntervalEntity">
+    <select id="getTimeInterValInfo" resultType="com.iot.entity.TimeIntervalEntity">
         select f_id as id, f_interval as timeInterval, f_unit as unit
         from t_time_interval
     </select>
 
 
-    <select id="getTimeInterValById" resultType="com.lot.entity.TimeIntervalEntity">
+    <select id="getTimeInterValById" resultType="com.iot.entity.TimeIntervalEntity">
         select f_interval as timeInterval, f_unit as unit
         from t_time_interval
         where f_id = #{id}

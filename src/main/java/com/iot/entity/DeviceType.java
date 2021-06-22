@@ -1,10 +1,9 @@
-package com.lot.entity;
+package com.iot.entity;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 
 /**
  * TODO

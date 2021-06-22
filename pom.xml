@@ -9,10 +9,10 @@
     <version>2.2.1.RELEASE</version>
     <relativePath/> <!-- lookup parent from repository -->
   </parent>
-  <groupId>com.lot</groupId>
-  <artifactId>AM</artifactId>
+  <groupId>com.iot</groupId>
+  <artifactId>mqtt-iot</artifactId>
   <version>1.0.0</version>
-  <name>AM</name>
+  <name>mqtt-iot</name>
   <description>mqtt client</description>
 
   <properties>

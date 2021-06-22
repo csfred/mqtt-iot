@@ -1,4 +1,4 @@
-package com.lot.utils;
+package com.iot.utils;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

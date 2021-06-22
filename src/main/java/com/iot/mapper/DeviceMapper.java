@@ -1,7 +1,8 @@
-package com.lot.mapper;
+package com.iot.mapper;
 
-import com.lot.entity.Device;
-import com.lot.entity.DeviceInfo;
+import com.iot.entity.Device;
+import com.iot.entity.DeviceInfo;
+import com.iot.entity.StationInfo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -18,6 +19,12 @@ import java.util.List;
 @Repository
 public interface DeviceMapper {
 
+
+    /**
+     * 存储站点信息
+     * @param stationInfo
+     */
+    void saveStationInfo(StationInfo stationInfo);
 
     /**
      * 保存设备信息

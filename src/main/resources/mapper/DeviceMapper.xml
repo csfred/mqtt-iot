@@ -1,31 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.lot.mapper.DeviceMapper">
+<mapper namespace="com.iot.mapper.DeviceMapper">
 
-    <insert id="saveDevice" parameterType="com.lot.entity.Device">
+    <insert id="saveStationInfo" parameterType="com.iot.entity.StationInfo">
+        insert into t_station_info(f_station_no, f_station_name, f_station_address, f_process_tech,
+                                   f_process_scale, f_dev_ops_num, f_contact_tel, f_bg_image_path,
+                                   f_remarks1, f_remarks2, f_remarks3)
+        values (#{stationNo}, #{stationName}, #{stationAddress}, MD5(processTech), #{processScale}, #{devOpsNum},
+                #{connectTel}, #{bgImgPath}, #{remarks1}, #{remarks2}, #{remarks3})
+    </insert>
+
+    <insert id="saveDevice" parameterType="com.iot.entity.Device">
         insert into t_device(f_station_no, f_dev_no, f_var_list_fields, f_var_list_fields_md5,
-        f_start_receive_time, f_end_receive_time)
-        values (#{stationNo}, #{devNo}, #{varListFields}, MD5(f_var_list_fields), #{startReceiveTime}, #{endReceiveTime})
+                             f_start_receive_time, f_end_receive_time)
+        values (#{stationNo}, #{devNo}, #{varListFields}, MD5(f_var_list_fields), #{startReceiveTime},
+                #{endReceiveTime})
     </insert>
 
     <update id="updateSameDeviceCounter" parameterType="java.lang.String">
-        update t_device set f_end_receive_time = #{endReceiveTime},
-                    f_start_receive_time = f_start_receive_time,
-                f_receive_count = f_receive_count + 1
+        update t_device
+        set f_end_receive_time   = #{endReceiveTime},
+            f_start_receive_time = f_start_receive_time,
+            f_receive_count      = f_receive_count + 1
         where f_station_no = #{stationNo}
-        and f_var_list_fields_md5 = #{varListFieldsMd5}
+          and f_var_list_fields_md5 = #{varListFieldsMd5}
     </update>
 
     <select id="checkDeviceExist" parameterType="java.lang.String" resultType="java.lang.Long">
-        select count(1) as total from t_device
-         where MD5(f_var_list_fields) = #{varList4FieldsMd5}
-         and f_station_no = #{stationNo}
+        select count(1) as total
+        from t_device
+        where MD5(f_var_list_fields) = #{varList4FieldsMd5}
+          and f_station_no = #{stationNo}
     </select>
 
-    <select id="getDeviceInfoAll" parameterType="java.lang.String" resultType="com.lot.entity.DeviceInfo">
-        select f_dev_no as devNo, f_station_no as stationNo, f_dev_name as devName,
-                f_dev_type as devType, f_dev_var_fields as devVarFields from t_device_info
+    <select id="getDeviceInfoAll" parameterType="java.lang.String" resultType="com.iot.entity.DeviceInfo">
+        select f_dev_no         as devNo,
+               f_station_no     as stationNo,
+               f_dev_name       as devName,
+               f_dev_type       as devType,
+               f_dev_var_fields as devVarFields
+        from t_device_info
         where f_station_no = #{stationNo}
     </select>
 

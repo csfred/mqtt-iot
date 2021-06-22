@@ -1,11 +1,11 @@
 spring:
   datasource:
-    url: jdbc:mysql://192.168.1.12:3306/lotdb?useSSL=false&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
-    username: root
-    password: 650312
-#    url: jdbc:mysql://172.16.2.246:13306/lotdb?useSSL=false&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
-#    username: dhub_dev
-#    password: 123456
+#    url: jdbc:mysql://192.168.1.12:3306/lotdb?useSSL=false&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+#    username: root
+#    password: 650312
+    url: jdbc:mysql://172.16.2.246:13306/iotdb?useSSL=false&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
+    username: dhub_dev
+    password: 123456
 
 mqtt:
   host: tcp://8.140.106.126:1883

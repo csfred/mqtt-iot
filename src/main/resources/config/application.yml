@@ -4,7 +4,7 @@ logging:
 server:
   port: 8080
   servlet:
-    context-path: /lot-server
+    context-path: /iot-server
 
 spring:
   application:

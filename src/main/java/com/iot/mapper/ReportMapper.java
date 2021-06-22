@@ -1,8 +1,8 @@
-package com.lot.mapper;
+package com.iot.mapper;
 
-import com.lot.entity.ReportContent;
-import com.lot.entity.DeviceInfo;
-import com.lot.entity.TimeIntervalEntity;
+import com.iot.entity.ReportContent;
+import com.iot.entity.DeviceInfo;
+import com.iot.entity.TimeIntervalEntity;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;

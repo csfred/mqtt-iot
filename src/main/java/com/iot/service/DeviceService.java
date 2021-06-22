@@ -1,7 +1,8 @@
-package com.lot.service;
+package com.iot.service;
 
-import com.lot.entity.Device;
-import com.lot.entity.DeviceInfo;
+import com.iot.entity.Device;
+import com.iot.entity.DeviceInfo;
+import com.iot.entity.StationInfo;
 
 import java.util.List;
 
@@ -13,6 +14,13 @@ import java.util.List;
  */
 public interface DeviceService {
 
+
+    /**
+     * 存储站点信息
+     *
+     * @param stationInfo
+     */
+    void saveStationInfo(StationInfo stationInfo);
 
     /**
      * 存储设备主信息
