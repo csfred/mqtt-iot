@@ -30,7 +30,7 @@
         where f_station_no = #{stationNo}
     </update>
 
-    <select id="getStationInfoByLonLat" parameterType="java.lang.Double" resultType="com.iot.entity.StationInfo">
+    <select id="getAllStationInfo" resultType="com.iot.entity.StationInfo">
         select f_station_no      as stationNo,
                f_station_name    as stationName,
                f_station_lon     as stationLon,
@@ -44,9 +44,7 @@
                f_remarks1        as remarks1,
                f_remarks2        as remarks2,
                f_remarks3        as remarks3
-        from t_station_info
-        where f_station_lon &gt;= #{stationLon}
-          and f_station_lat &lt;= #{stationLat}
+        from t_station_info;
     </select>
 
     <insert id="saveDevice" parameterType="com.iot.entity.Device">
@@ -55,6 +53,46 @@
         values (#{stationNo}, #{devNo}, #{varListFields}, MD5(f_var_list_fields), #{startReceiveTime},
                 #{endReceiveTime})
     </insert>
+
+    <select id="getDeviceLiveData" resultType="com.iot.entity.Device">
+        select f_dev_no              as devNo,
+               f_station_no          as stationNo,
+               f_var_list_fields     as varListFields,
+               f_var_list_fields_md5 as varListFieldsMd5,
+               f_start_receive_time  as startReceiveTime,
+               f_receive_count       as receiveCount,
+               f_end_receive_time    as endReceiveTime
+        from t_device
+        where f_dev_no = #{devNo}
+          and f_station_no = #{stationNo}
+          and f_end_receive_time &lt;= #{queryTime}
+    </select>
+
+    <insert id="saveDeviceInfo" parameterType="com.iot.entity.DeviceInfo">
+        insert into t_device_info(f_station_no, f_dev_name, f_dev_type, f_dev_var_fields, f_dev_vector)
+        values (#{stationNo}, #{devName}, #{devType}, MD5(devVarFields), #{deviceVector})
+    </insert>
+
+    <select id="getDeviceInfoByStationNo" parameterType="java.lang.String" resultType="com.iot.entity.DeviceInfo">
+        select f_dev_no         as devNo,
+               f_station_no     as stationNo,
+               f_dev_name       as devName,
+               f_dev_type       as devType,
+               f_dev_var_fields as devVarFields,
+               f_dev_vector     as deviceVector
+        from t_device_info
+        where f_station_no = #{stationNo}
+    </select>
+
+    <update id="updateDeviceInfo" parameterType="com.iot.entity.DeviceInfo">
+        update t_device_info
+        set f_dev_name       = #{devName},
+            f_dev_type       = #{devType},
+            f_dev_var_fields = #{devVarFields},
+            f_dev_vector     = #{deviceVector}
+        where f_dev_no = #{devNo}
+          and f_station_no = #{stationNo}
+    </update>
 
     <update id="updateSameDeviceCounter" parameterType="java.lang.String">
         update t_device
@@ -80,6 +118,11 @@
                f_dev_var_fields as devVarFields
         from t_device_info
         where f_station_no = #{stationNo}
+    </select>
+
+    <select id="getAllDeviceType" resultType="com.iot.entity.DeviceType">
+        select f_id as id, f_name as devTypeName
+        from t_device_type;
     </select>
 
 </mapper>

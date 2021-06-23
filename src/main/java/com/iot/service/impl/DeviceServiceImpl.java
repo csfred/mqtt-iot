@@ -1,15 +1,16 @@
 package com.iot.service.impl;
 
-import com.iot.entity.Device;
-import com.iot.entity.DeviceInfo;
-import com.iot.entity.StationInfo;
+import com.iot.entity.*;
 import com.iot.mapper.DeviceMapper;
 import com.iot.service.DeviceService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * TODO
@@ -35,13 +36,28 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<StationInfo> getStationInfoByLonLat(Double stationLon, Double stationLat) {
-        return deviceMapper.getStationInfoByLonLat(stationLon, stationLat);
+    public List<StationInfo> getAllStationInfo() {
+        return deviceMapper.getAllStationInfo();
     }
 
     @Override
     public void saveDevice(Device param) {
         deviceMapper.saveDevice(param);
+    }
+
+    @Override
+    public void saveDeviceInfo(DeviceInfo deviceInfo) {
+        deviceMapper.saveDeviceInfo(deviceInfo);
+    }
+
+    @Override
+    public List<DeviceInfo> getDeviceInfoByStationNo(String stationNo) {
+        return deviceMapper.getDeviceInfoByStationNo(stationNo);
+    }
+
+    @Override
+    public void updateDeviceInfo(DeviceInfo deviceInfo) {
+        deviceMapper.updateDeviceInfo(deviceInfo);
     }
 
 
@@ -65,7 +81,17 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<Device> getDeviceAll() {
-        return deviceMapper.getDeviceAll();
+    public List<DeviceType> getAllDeviceType() {
+        return deviceMapper.getAllDeviceType();
+    }
+
+    @Override
+    public List<Device> getDeviceLiveData(String stationNo, Long devNo) {
+        DeviceLiveData deviceLiveData = new DeviceLiveData();
+        deviceLiveData.setDevNo(devNo);
+        deviceLiveData.setStationNo(stationNo);
+        LocalDateTime queryTime = LocalDateTime.now().minusSeconds(20);
+        deviceLiveData.setQueryTime(Timestamp.valueOf(queryTime));
+        return deviceMapper.getDeviceLiveData(deviceLiveData);
     }
 }

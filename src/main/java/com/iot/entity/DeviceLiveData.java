@@ -14,7 +14,7 @@ import java.sql.Timestamp;
  */
 @Data
 @Accessors(chain = true)
-public class Device implements Serializable {
+public class DeviceLiveData implements Serializable {
 
     /**
      * 设备编号
@@ -27,27 +27,8 @@ public class Device implements Serializable {
     private String stationNo;
 
     /**
-     * 参数列表字段
-     */
-    private String varListFields;
-
-    /**
-     * 参数列表字段MD5
-     */
-    private String varListFieldsMd5;
-
-    /**
-     * 开始接受时间
-     */
-    private Timestamp startReceiveTime;
-
-    /**
      * 结束接收时间
      */
-    private Timestamp endReceiveTime;
+    private Timestamp queryTime;
 
-    /**
-     * 接受个数
-     */
-    private Integer receiveCount;
 }

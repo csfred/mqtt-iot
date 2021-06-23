@@ -2,6 +2,7 @@ package com.iot.service;
 
 import com.iot.entity.Device;
 import com.iot.entity.DeviceInfo;
+import com.iot.entity.DeviceType;
 import com.iot.entity.StationInfo;
 
 import java.util.List;
@@ -24,17 +25,17 @@ public interface DeviceService {
 
     /**
      * 根据站点编号修改站点信息
+     *
      * @param stationInfo
      */
     void updateStationInfo(StationInfo stationInfo);
 
     /**
      * 根据经纬度获取站点信息集合
-     * @param stationLon
-     * @param stationLat
+     *
      * @return
      */
-    List<StationInfo> getStationInfoByLonLat(Double stationLon, Double stationLat);
+    List<StationInfo> getAllStationInfo();
 
     /**
      * 存储设备主信息
@@ -42,6 +43,28 @@ public interface DeviceService {
      * @param param 参数
      */
     void saveDevice(Device param);
+
+    /**
+     * 存储设备信息，增加设备
+     *
+     * @param deviceInfo
+     */
+    void saveDeviceInfo(DeviceInfo deviceInfo);
+
+    /**
+     * 根据站点编号查询所有设备信息
+     *
+     * @param stationNo
+     * @return
+     */
+    List<DeviceInfo> getDeviceInfoByStationNo(String stationNo);
+
+    /**
+     * 更新设备信息
+     *
+     * @param deviceInfo
+     */
+    void updateDeviceInfo(DeviceInfo deviceInfo);
 
 
     /**
@@ -75,10 +98,19 @@ public interface DeviceService {
     List<DeviceInfo> getDeviceInfoAll(String stationNo);
 
     /**
-     * 获取扩展表数据
+     * 获取所有设备类别
      *
-     * @return list
+     * @return
      */
-    List<Device> getDeviceAll();
+    List<DeviceType> getAllDeviceType();
+
+    /**
+     * 获取设备实时数据
+     *
+     * @param stationNo
+     * @param devNo
+     * @return
+     */
+    List<Device> getDeviceLiveData(String stationNo, Long devNo);
 
 }

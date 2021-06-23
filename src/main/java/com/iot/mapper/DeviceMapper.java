@@ -1,13 +1,12 @@
 package com.iot.mapper;
 
-import com.iot.entity.Device;
-import com.iot.entity.DeviceInfo;
-import com.iot.entity.StationInfo;
+import com.iot.entity.*;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * TODO
@@ -22,24 +21,24 @@ public interface DeviceMapper {
 
     /**
      * 存储站点信息
+     *
      * @param stationInfo
      */
     void saveStationInfo(StationInfo stationInfo);
 
     /**
      * 根据站点编号修改站点信息
+     *
      * @param stationInfo
      */
     void updateStationInfo(StationInfo stationInfo);
 
     /**
-     * 根据经纬度获取站点信息集合
-     * @param stationLon
-     * @param stationLat
+     * 获取所有站点信息集合
+     *
      * @return
      */
-    List<StationInfo> getStationInfoByLonLat(@Param("stationLon") Double stationLon,
-                                             @Param("stationLat") Double stationLat);
+    List<StationInfo> getAllStationInfo();
 
     /**
      * 保存设备信息
@@ -48,6 +47,24 @@ public interface DeviceMapper {
      */
     void saveDevice(Device param);
 
+    /**
+     * 保存设备信息
+     * @param deviceInfo
+     */
+    void saveDeviceInfo(DeviceInfo deviceInfo);
+
+    /**
+     * 根据站点编号获取站点下所有设备
+     * @param stationNo
+     * @return
+     */
+    List<DeviceInfo> getDeviceInfoByStationNo(@Param("stationNo") String stationNo);
+
+    /**
+     * 根据站点编号，设备编号更新设备信息
+     * @param deviceInfo
+     */
+    void updateDeviceInfo(DeviceInfo deviceInfo);
 
     /**
      * 更新相同站点相同设备参数计数
@@ -80,10 +97,12 @@ public interface DeviceMapper {
      */
     List<DeviceInfo> getDeviceInfoAll(@Param("stationNo") String stationNo);
 
+
     /**
-     * 获取扩展表数据
-     *
-     * @return list
+     * 获取所有设备类别信息 ID， 名称
+     * @return
      */
-    List<Device> getDeviceAll();
+    List<DeviceType> getAllDeviceType();
+
+    List<Device> getDeviceLiveData(DeviceLiveData deviceLiveData);
 }
