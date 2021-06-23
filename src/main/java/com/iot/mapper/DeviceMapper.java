@@ -49,12 +49,14 @@ public interface DeviceMapper {
 
     /**
      * 保存设备信息
+     *
      * @param deviceInfo
      */
     void saveDeviceInfo(DeviceInfo deviceInfo);
 
     /**
      * 根据站点编号获取站点下所有设备
+     *
      * @param stationNo
      * @return
      */
@@ -62,6 +64,7 @@ public interface DeviceMapper {
 
     /**
      * 根据站点编号，设备编号更新设备信息
+     *
      * @param deviceInfo
      */
     void updateDeviceInfo(DeviceInfo deviceInfo);
@@ -100,9 +103,16 @@ public interface DeviceMapper {
 
     /**
      * 获取所有设备类别信息 ID， 名称
+     *
      * @return
      */
     List<DeviceType> getAllDeviceType();
 
+    /**
+     * 获取设备实时数据
+     *
+     * @param deviceLiveData
+     * @return
+     */
     List<Device> getDeviceLiveData(DeviceLiveData deviceLiveData);
 }

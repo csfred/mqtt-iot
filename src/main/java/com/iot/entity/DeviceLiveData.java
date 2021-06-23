@@ -27,7 +27,7 @@ public class DeviceLiveData implements Serializable {
     private String stationNo;
 
     /**
-     * 结束接收时间
+     * 轮询查询时间，目前当前时间-20s
      */
     private Timestamp queryTime;
 
