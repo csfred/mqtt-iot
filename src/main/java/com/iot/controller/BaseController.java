@@ -45,6 +45,13 @@ public class BaseController {
         return Result.success();
     }
 
+    /**
+     * 根据经纬度范围获取全部站点信息
+     *
+     * @param stationLon
+     * @param stationLat
+     * @return
+     */
     @RequestMapping("/getStationInfoByLonLat")
     Result getStationInfoByLonLat(@RequestParam("stationLon") Double stationLon,
                                   @RequestParam("stationLat") Double stationLat) {
@@ -55,6 +62,22 @@ public class BaseController {
             return Result.error(e.getMessage());
         }
         return Result.success("请求成功", data);
+    }
+
+    /**
+     * 根据站点编号修改站点信息
+     *
+     * @param stationInfo
+     * @return
+     */
+    @RequestMapping("/updateStationInfo")
+    Result getStationInfoByLonLat(@RequestBody StationInfo stationInfo) {
+        try {
+            deviceService.updateStationInfo(stationInfo);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+        return Result.success("请求成功");
     }
 
 }

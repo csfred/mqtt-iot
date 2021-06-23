@@ -13,6 +13,23 @@
                 #{connectTel}, #{bgImgPath}, #{remarks1}, #{remarks2}, #{remarks3})
     </insert>
 
+    <update id="updateStationInfo" parameterType="com.iot.entity.StationInfo">
+        update t_station_info
+        set f_station_name    = #{stationName},
+            f_station_lon     = #{stationLon},
+            f_station_lat     = #{stationLat},
+            f_station_address = #{stationAddress},
+            f_process_tech    = #{processTech},
+            f_process_scale   = #{processScale},
+            f_dev_ops_num     = #{devOpsNum},
+            f_contact_tel     = #{connectTel},
+            f_bg_image_path   = #{bgImgPath},
+            f_remarks1        = #{remarks1},
+            f_remarks2        = #{remarks2},
+            f_remarks3        = #{remarks3}
+        where f_station_no = #{stationNo}
+    </update>
+
     <select id="getStationInfoByLonLat" parameterType="java.lang.Double" resultType="com.iot.entity.StationInfo">
         select f_station_no      as stationNo,
                f_station_name    as stationName,

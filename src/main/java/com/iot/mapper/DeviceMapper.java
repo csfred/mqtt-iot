@@ -27,6 +27,12 @@ public interface DeviceMapper {
     void saveStationInfo(StationInfo stationInfo);
 
     /**
+     * 根据站点编号修改站点信息
+     * @param stationInfo
+     */
+    void updateStationInfo(StationInfo stationInfo);
+
+    /**
      * 根据经纬度获取站点信息集合
      * @param stationLon
      * @param stationLat
