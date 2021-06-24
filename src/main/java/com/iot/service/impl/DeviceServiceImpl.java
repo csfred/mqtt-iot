@@ -85,12 +85,13 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<Device> getDeviceLiveData(String stationNo, Long devNo) {
+    public Device getDeviceLiveData(String stationNo, Long devNo) {
         DeviceLiveData deviceLiveData = new DeviceLiveData();
         deviceLiveData.setDevNo(devNo);
         deviceLiveData.setStationNo(stationNo);
         LocalDateTime queryTime = LocalDateTime.now().minusSeconds(20);
         deviceLiveData.setQueryTime(Timestamp.valueOf(queryTime));
+
         return deviceMapper.getDeviceLiveData(deviceLiveData);
     }
 }

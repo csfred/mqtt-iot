@@ -111,6 +111,6 @@ public interface DeviceService {
      * @param devNo
      * @return
      */
-    List<Device> getDeviceLiveData(String stationNo, Long devNo);
+    Device getDeviceLiveData(String stationNo, Long devNo);
 
 }

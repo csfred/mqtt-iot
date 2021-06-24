@@ -47,7 +47,7 @@ public class BaseController {
     }
 
     /**
-     * 根据经纬度范围获取全部站点信息
+     * 获取全部站点信息
      *
      * @return
      */
@@ -110,6 +110,12 @@ public class BaseController {
         return Result.success("请求成功");
     }
 
+    /**
+     * 通过站点编号获取设备信息
+     *
+     * @param stationNo
+     * @return
+     */
     @RequestMapping("/getDeviceInfoByStationNo")
     Result getDeviceInfoByStationNo(@RequestParam("stationNo") String stationNo) {
         Object data;

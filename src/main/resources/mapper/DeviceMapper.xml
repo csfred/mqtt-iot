@@ -66,6 +66,7 @@
         where f_dev_no = #{devNo}
           and f_station_no = #{stationNo}
           and f_end_receive_time &lt;= #{queryTime}
+        order by f_end_receive_time desc limit 0, 1
     </select>
 
     <insert id="saveDeviceInfo" parameterType="com.iot.entity.DeviceInfo">

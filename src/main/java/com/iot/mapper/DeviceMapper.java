@@ -114,5 +114,5 @@ public interface DeviceMapper {
      * @param deviceLiveData
      * @return
      */
-    List<Device> getDeviceLiveData(DeviceLiveData deviceLiveData);
+    Device getDeviceLiveData(DeviceLiveData deviceLiveData);
 }
