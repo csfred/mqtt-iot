@@ -30,7 +30,7 @@
         where f_station_no = #{stationNo}
     </update>
 
-    <select id="getAllStationInfo" resultType="com.iot.entity.StationInfo">
+    <select id="getPageAllStationInfo" resultType="com.iot.entity.StationInfo">
         select f_station_no      as stationNo,
                f_station_name    as stationName,
                f_station_lon     as stationLon,
@@ -44,8 +44,22 @@
                f_remarks1        as remarks1,
                f_remarks2        as remarks2,
                f_remarks3        as remarks3
-        from t_station_info;
+        from t_station_info
+        where f_station_name like #{stationName} limit #{page}
+            , #{pageSize}
     </select>
+
+    <select id="getPageAllStationInfoTotal" parameterType="java.lang.String" resultType="java.lang.Long">
+        select count(1) as total
+        from t_station_info
+        where f_station_name like #{stationName}
+    </select>
+
+    <delete id="deleteStationInfo" parameterType="java.lang.String">
+        delete
+        from t_station_info
+        where f_station_no = #{stationNo}
+    </delete>
 
     <insert id="saveDevice" parameterType="com.iot.entity.Device">
         insert into t_device(f_station_no, f_dev_no, f_var_list_fields, f_var_list_fields_md5,

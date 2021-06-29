@@ -1,9 +1,11 @@
 package com.iot.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.iot.entity.Device;
 import com.iot.entity.DeviceInfo;
 import com.iot.entity.DeviceType;
 import com.iot.entity.StationInfo;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -30,12 +32,25 @@ public interface DeviceService {
      */
     void updateStationInfo(StationInfo stationInfo);
 
+
     /**
-     * 根据经纬度获取站点信息集合
+     * 获取站点信息集合
      *
+     * @param page
+     * @param pageSize
+     * @param stationName
      * @return
      */
-    List<StationInfo> getAllStationInfo();
+    JSONObject getPageAllStationInfo(@RequestParam("page") Integer page,
+                                     @RequestParam("pageSize") Integer pageSize,
+                                     @RequestParam("stationName") String stationName);
+
+    /**
+     * 根据站点编号删除站点信息
+     *
+     * @param stationNo
+     */
+    void deleteStationInfo(String stationNo);
 
     /**
      * 存储设备主信息

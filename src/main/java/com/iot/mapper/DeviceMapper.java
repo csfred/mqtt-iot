@@ -37,7 +37,24 @@ public interface DeviceMapper {
      *
      * @return
      */
-    List<StationInfo> getAllStationInfo();
+    List<StationInfo> getPageAllStationInfo(@Param("page") Integer page,
+                                            @Param("pageSize") Integer pageSize,
+                                            @Param("stationName") String stationName);
+
+    /**
+     * 根据站点名称查找总数
+     *
+     * @param stationName
+     * @return
+     */
+    Long getPageAllStationInfoTotal(@Param("stationName") String stationName);
+
+    /**
+     * 根据站点编号删除站点信息
+     *
+     * @param stationNo
+     */
+    void deleteStationInfo(@Param("stationNo") String stationNo);
 
     /**
      * 保存设备信息

@@ -51,15 +51,33 @@ public class BaseController {
      *
      * @return
      */
-    @RequestMapping("/getAllStationInfo")
-    Result getStationInfoByLonLat() {
+    @RequestMapping("/getPageAllStationInfo")
+    Result getPageAllStationInfo(@RequestParam("page") Integer page,
+                                 @RequestParam("pageSize") Integer pageSize,
+                                 @RequestParam("stationName") String stationName) {
         Object data;
         try {
-            data = deviceService.getAllStationInfo();
+            data = deviceService.getPageAllStationInfo(page, pageSize, stationName);
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }
         return Result.success("请求成功", data);
+    }
+
+    /**
+     * 根据站点编号删除站点信息
+     *
+     * @param stationNo
+     * @return
+     */
+    @RequestMapping("/deleteStationInfo")
+    Result deleteStationInfo(@RequestParam("stationNo") String stationNo) {
+        try {
+            deviceService.deleteStationInfo(stationNo);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+        return Result.success("请求成功");
     }
 
     /**
@@ -160,6 +178,5 @@ public class BaseController {
         }
         return Result.success("请求成功", data);
     }
-
 
 }

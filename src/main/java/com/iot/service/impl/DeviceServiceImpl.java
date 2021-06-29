@@ -1,10 +1,12 @@
 package com.iot.service.impl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.iot.entity.*;
 import com.iot.mapper.DeviceMapper;
 import com.iot.service.DeviceService;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import java.sql.Timestamp;
@@ -35,8 +37,24 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<StationInfo> getAllStationInfo() {
-        return deviceMapper.getAllStationInfo();
+    public JSONObject getPageAllStationInfo(@RequestParam("page") Integer page,
+                                            Integer pageSize,
+                                            String stationName) {
+        String stationNameLike = "%" + stationName + "%";
+        Long total = deviceMapper.getPageAllStationInfoTotal(stationNameLike);
+        if (page > 0) {
+            page = page - 1;
+        }
+        List<StationInfo> retList = deviceMapper.getPageAllStationInfo(page, pageSize, stationNameLike);
+        JSONObject retObject = new JSONObject(8);
+        retObject.put("total", total);
+        retObject.put("dataList", retList);
+        return retObject;
+    }
+
+    @Override
+    public void deleteStationInfo(String stationNo) {
+        deviceMapper.deleteStationInfo(stationNo);
     }
 
     @Override
