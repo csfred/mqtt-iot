@@ -126,7 +126,7 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public boolean uploadBinaryFile(Integer type, MultipartFile binaryFile) {
+    public String uploadBinaryFile(Integer type, MultipartFile binaryFile) {
         StringBuilder pathBuilder = new StringBuilder();
         pathBuilder.append(uploadPath).append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))).append("/");
         switch (type) {
@@ -142,11 +142,12 @@ public class DeviceServiceImpl implements DeviceService {
                 break;
         }
         if (null == pathBuilder) {
-            return false;
+            return "";
         }
         String targetFilePath = pathBuilder.toString();
         String fileName = UUID.randomUUID().toString().replace("-", "") + ".png";
-        File targetFile = new File(targetFilePath + fileName);
+        String fullFileName = targetFilePath + fileName;
+        File targetFile = new File(fullFileName);
 
         FileOutputStream fileOutputStream = null;
         try {
@@ -155,7 +156,7 @@ public class DeviceServiceImpl implements DeviceService {
             System.out.println("------>>>>>>uploaded a file successfully!<<<<<<------");
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return "";
         } finally {
             try {
                 fileOutputStream.close();
@@ -163,6 +164,6 @@ public class DeviceServiceImpl implements DeviceService {
                 e.printStackTrace();
             }
         }
-        return true;
+        return fullFileName;
     }
 }

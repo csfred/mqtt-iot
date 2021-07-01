@@ -61,9 +61,14 @@ public class StationInfo implements Serializable {
     private String connectTel;
 
     /**
-     * 背景底图路径
+     * 设备背景底图路径[1,2,3]
      */
-    private String bgImgPath;
+    private String bgDevImgPath;
+
+    /**
+     * 水质检测底图路径[1,2,3]
+     */
+    private String bgWaterImgPath;
 
     /**
      * 备注1

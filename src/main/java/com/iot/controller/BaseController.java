@@ -4,6 +4,7 @@ import com.iot.entity.DeviceInfo;
 import com.iot.entity.StationInfo;
 import com.iot.service.DeviceService;
 import com.iot.utils.Result;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -184,11 +185,11 @@ public class BaseController {
     Result uploadBinaryFile(@RequestParam("type") Integer type,
                             @RequestParam("binaryFile") MultipartFile binaryFile) {
 
-        boolean ret = deviceService.uploadBinaryFile(type, binaryFile);
-        if (ret) {
-            return Result.success("上传成功");
+        String fullFileName = deviceService.uploadBinaryFile(type, binaryFile);
+        if (StringUtils.isEmpty(fullFileName)) {
+            return Result.error("上传失败", "");
         } else {
-            return Result.error("上传失败");
+            return Result.success("上传成功", fullFileName);
         }
     }
 

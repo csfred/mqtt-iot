@@ -135,6 +135,6 @@ public interface DeviceService {
      * @param binaryFile
      * @param type 类型 设备的1，水质的2....
      */
-    boolean uploadBinaryFile(Integer type, MultipartFile binaryFile);
+    String uploadBinaryFile(Integer type, MultipartFile binaryFile);
 
 }

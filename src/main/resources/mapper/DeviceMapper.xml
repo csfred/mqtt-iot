@@ -6,44 +6,47 @@
     <insert id="saveStationInfo" parameterType="com.iot.entity.StationInfo">
         insert into t_station_info(f_station_no, f_station_name, f_station_lon, f_station_lat, f_station_address,
                                    f_process_tech,
-                                   f_process_scale, f_dev_ops_num, f_contact_tel, f_bg_image_path,
+                                   f_process_scale, f_dev_ops_num, f_contact_tel, f_bg_dev_img_path,
+                                   f_bg_water_img_path,
                                    f_remarks1, f_remarks2, f_remarks3)
         values (#{stationNo}, #{stationName}, #{stationLon}, #{stationLat}, #{stationAddress}, #{processTech},
                 #{processScale}, #{devOpsNum},
-                #{connectTel}, #{bgImgPath}, #{remarks1}, #{remarks2}, #{remarks3})
+                #{connectTel}, #{bgDevImgPath}, #{bgWaterImgPath}, #{remarks1}, #{remarks2}, #{remarks3})
     </insert>
 
     <update id="updateStationInfo" parameterType="com.iot.entity.StationInfo">
         update t_station_info
-        set f_station_name    = #{stationName},
-            f_station_lon     = #{stationLon},
-            f_station_lat     = #{stationLat},
-            f_station_address = #{stationAddress},
-            f_process_tech    = #{processTech},
-            f_process_scale   = #{processScale},
-            f_dev_ops_num     = #{devOpsNum},
-            f_contact_tel     = #{connectTel},
-            f_bg_image_path   = #{bgImgPath},
-            f_remarks1        = #{remarks1},
-            f_remarks2        = #{remarks2},
-            f_remarks3        = #{remarks3}
+        set f_station_name      = #{stationName},
+            f_station_lon       = #{stationLon},
+            f_station_lat       = #{stationLat},
+            f_station_address   = #{stationAddress},
+            f_process_tech      = #{processTech},
+            f_process_scale     = #{processScale},
+            f_dev_ops_num       = #{devOpsNum},
+            f_contact_tel       = #{connectTel},
+            f_bg_dev_img_path   = #{bgDevImgPath},
+            f_bg_water_img_path = #{bgWaterImgPath},
+            f_remarks1          = #{remarks1},
+            f_remarks2          = #{remarks2},
+            f_remarks3          = #{remarks3}
         where f_station_no = #{stationNo}
     </update>
 
     <select id="getPageAllStationInfo" resultType="com.iot.entity.StationInfo">
-        select f_station_no      as stationNo,
-               f_station_name    as stationName,
-               f_station_lon     as stationLon,
-               f_station_lat     as stationLat,
-               f_station_address as stationAddress,
-               f_process_tech    as processTech,
-               f_process_scale   as processScale,
-               f_dev_ops_num     as devOpsNum,
-               f_contact_tel     as connectTel,
-               f_bg_image_path   as bgImgPath,
-               f_remarks1        as remarks1,
-               f_remarks2        as remarks2,
-               f_remarks3        as remarks3
+        select f_station_no        as stationNo,
+               f_station_name      as stationName,
+               f_station_lon       as stationLon,
+               f_station_lat       as stationLat,
+               f_station_address   as stationAddress,
+               f_process_tech      as processTech,
+               f_process_scale     as processScale,
+               f_dev_ops_num       as devOpsNum,
+               f_contact_tel       as connectTel,
+               f_bg_dev_img_path   as bgImgPath,
+               f_bg_water_img_path as bgWaterImgPath,
+               f_remarks1          as remarks1,
+               f_remarks2          as remarks2,
+               f_remarks3          as remarks3
         from t_station_info
         where f_station_name like #{stationName} limit #{page}
             , #{pageSize}

@@ -8,7 +8,7 @@ server:
 
 spring:
   application:
-    name: DC
+    name: iot-server
   profiles:
     #active: @spring.profiles.active@
     active: prod
