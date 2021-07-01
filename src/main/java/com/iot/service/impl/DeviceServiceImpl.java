@@ -5,13 +5,22 @@ import com.iot.entity.*;
 import com.iot.mapper.DeviceMapper;
 import com.iot.service.DeviceService;
 import org.apache.ibatis.annotations.Param;
+import org.apache.logging.log4j.util.StringBuilders;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * TODO
@@ -24,6 +33,9 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Resource
     private DeviceMapper deviceMapper;
+
+    @Value("${upload.path}")
+    private String uploadPath;
 
 
     @Override
@@ -111,5 +123,46 @@ public class DeviceServiceImpl implements DeviceService {
         deviceLiveData.setQueryTime(Timestamp.valueOf(queryTime));
 
         return deviceMapper.getDeviceLiveData(deviceLiveData);
+    }
+
+    @Override
+    public boolean uploadBinaryFile(Integer type, MultipartFile binaryFile) {
+        StringBuilder pathBuilder = new StringBuilder();
+        pathBuilder.append(uploadPath).append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))).append("/");
+        switch (type) {
+            case 1:
+                //设备
+                pathBuilder.append("/device/");
+                break;
+            case 2:
+                pathBuilder.append("/water/");
+                break;
+            default:
+                pathBuilder = null;
+                break;
+        }
+        if (null == pathBuilder) {
+            return false;
+        }
+        String targetFilePath = pathBuilder.toString();
+        String fileName = UUID.randomUUID().toString().replace("-", "") + ".png";
+        File targetFile = new File(targetFilePath + fileName);
+
+        FileOutputStream fileOutputStream = null;
+        try {
+            fileOutputStream = new FileOutputStream(targetFile);
+            IOUtils.copy(binaryFile.getInputStream(), fileOutputStream);
+            System.out.println("------>>>>>>uploaded a file successfully!<<<<<<------");
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            try {
+                fileOutputStream.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return true;
     }
 }

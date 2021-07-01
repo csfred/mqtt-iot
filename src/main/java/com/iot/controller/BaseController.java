@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 
@@ -177,6 +178,18 @@ public class BaseController {
             return Result.error(e.getMessage());
         }
         return Result.success("请求成功", data);
+    }
+
+    @RequestMapping("/uploadBinaryFile")
+    Result uploadBinaryFile(@RequestParam("type") Integer type,
+                            @RequestParam("binaryFile") MultipartFile binaryFile) {
+
+        boolean ret = deviceService.uploadBinaryFile(type, binaryFile);
+        if (ret) {
+            return Result.success("上传成功");
+        } else {
+            return Result.error("上传失败");
+        }
     }
 
 }

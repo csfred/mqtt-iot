@@ -12,3 +12,6 @@ mqtt:
   host: tcp://8.140.106.126:1883
   username: root
   password: Aa-654321
+
+upload:
+  path: /data/

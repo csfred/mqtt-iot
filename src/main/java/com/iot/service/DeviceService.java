@@ -6,7 +6,9 @@ import com.iot.entity.DeviceInfo;
 import com.iot.entity.DeviceType;
 import com.iot.entity.StationInfo;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -127,5 +129,12 @@ public interface DeviceService {
      * @return
      */
     Device getDeviceLiveData(String stationNo, Long devNo);
+
+    /**
+     * 文件上传
+     * @param binaryFile
+     * @param type 类型 设备的1，水质的2....
+     */
+    boolean uploadBinaryFile(Integer type, MultipartFile binaryFile);
 
 }
