@@ -42,7 +42,7 @@
                f_process_scale     as processScale,
                f_dev_ops_num       as devOpsNum,
                f_contact_tel       as connectTel,
-               f_bg_dev_img_path   as bgImgPath,
+               f_bg_dev_img_path   as bgDevImgPath,
                f_bg_water_img_path as bgWaterImgPath,
                f_remarks1          as remarks1,
                f_remarks2          as remarks2,

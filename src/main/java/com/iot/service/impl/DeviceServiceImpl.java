@@ -13,9 +13,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -126,37 +125,53 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public String uploadBinaryFile(Integer type, MultipartFile binaryFile) {
+    public boolean uploadBinaryFile(Integer type, MultipartFile binaryFile) {
         StringBuilder pathBuilder = new StringBuilder();
-        pathBuilder.append(uploadPath).append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))).append("/");
+        pathBuilder.append(uploadPath);
         switch (type) {
             case 1:
                 //设备
-                pathBuilder.append("/device/");
+                if (uploadPath.endsWith("/")) {
+                    pathBuilder.append("device/");
+                } else {
+                    pathBuilder.append("/device/");
+                }
                 break;
             case 2:
-                pathBuilder.append("/water/");
+                if (uploadPath.endsWith("/")) {
+                    pathBuilder.append("water/");
+                } else {
+                    pathBuilder.append("/water/");
+                }
                 break;
             default:
                 pathBuilder = null;
                 break;
         }
         if (null == pathBuilder) {
-            return "";
+            return false;
         }
+        pathBuilder.append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))).append("/");
         String targetFilePath = pathBuilder.toString();
-        String fileName = UUID.randomUUID().toString().replace("-", "") + ".png";
+
+        String fileName = binaryFile.getOriginalFilename();
         String fullFileName = targetFilePath + fileName;
         File targetFile = new File(fullFileName);
 
         FileOutputStream fileOutputStream = null;
         try {
+            if (!targetFile.exists()) {
+                File parentFile = targetFile.getParentFile();
+                if (!parentFile.exists()) {
+                    parentFile.mkdirs();
+                }
+                targetFile.createNewFile();
+            }
             fileOutputStream = new FileOutputStream(targetFile);
             IOUtils.copy(binaryFile.getInputStream(), fileOutputStream);
-            System.out.println("------>>>>>>uploaded a file successfully!<<<<<<------");
         } catch (IOException e) {
             e.printStackTrace();
-            return "";
+            return false;
         } finally {
             try {
                 fileOutputStream.close();
@@ -164,6 +179,68 @@ public class DeviceServiceImpl implements DeviceService {
                 e.printStackTrace();
             }
         }
-        return fullFileName;
+        return true;
+    }
+
+    @Override
+    public boolean downloadBinaryFile(Integer type, String filePath, HttpServletResponse response) {
+        try {
+            StringBuilder pathBuilder = new StringBuilder();
+            pathBuilder.append(uploadPath);
+            switch (type) {
+                case 1:
+                    //设备
+                    if (uploadPath.endsWith("/")) {
+                        pathBuilder.append("device/");
+                    } else {
+                        pathBuilder.append("/device/");
+                    }
+                    break;
+                case 2:
+                    if (uploadPath.endsWith("/")) {
+                        pathBuilder.append("water/");
+                    } else {
+                        pathBuilder.append("/water/");
+                    }
+                    break;
+                default:
+                    pathBuilder = null;
+                    break;
+            }
+            if (null == pathBuilder) {
+                return false;
+            }
+            if (filePath.startsWith("/")) {
+                pathBuilder.append(filePath.substring(1));
+            } else {
+                pathBuilder.append(filePath);
+            }
+            String fullFileName = pathBuilder.toString();
+            // path是指欲下载的文件的路径。
+            File file = new File(fullFileName);
+            // 取得文件名。
+            String filename = file.getName();
+            // 取得文件的后缀名。
+            String ext = filename.substring(filename.lastIndexOf(".") + 1).toUpperCase();
+            // 以流的形式下载文件。
+            InputStream fis = new BufferedInputStream(new FileInputStream(fullFileName));
+            byte[] buffer = new byte[fis.available()];
+            fis.read(buffer);
+            fis.close();
+            // 清空response
+            response.reset();
+            // 设置response的Header
+            response.addHeader("Content-Disposition", "attachment;filename=" + new String(filename.getBytes()));
+            response.addHeader("Content-Length", "" + file.length());
+            OutputStream toClient = new BufferedOutputStream(response.getOutputStream());
+            response.setContentType("application/octet-stream");
+            toClient.write(buffer);
+            toClient.flush();
+            toClient.close();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return false;
+        }
+        return true;
     }
 }

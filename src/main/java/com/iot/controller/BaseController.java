@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * 报表控制器
@@ -185,11 +186,37 @@ public class BaseController {
     Result uploadBinaryFile(@RequestParam("type") Integer type,
                             @RequestParam("binaryFile") MultipartFile binaryFile) {
 
-        String fullFileName = deviceService.uploadBinaryFile(type, binaryFile);
-        if (StringUtils.isEmpty(fullFileName)) {
-            return Result.error("上传失败", "");
+        boolean ret = deviceService.uploadBinaryFile(type, binaryFile);
+        if (ret) {
+            return Result.success("上传成功");
         } else {
-            return Result.success("上传成功", fullFileName);
+            return Result.error("上传失败");
+        }
+    }
+
+    @RequestMapping("/downloadBinaryFile")
+    Result downloadBinaryFile(@RequestParam("type") Integer type,
+                              @RequestParam("filePath") String filePath,
+                              HttpServletResponse response) {
+
+        boolean ret = deviceService.downloadBinaryFile(type, filePath, response);
+        if (ret) {
+            return Result.success("下载成功");
+        } else {
+            return Result.error("下载失败");
+        }
+    }
+
+    @RequestMapping("/preivewBgImg")
+    Result downloadBinaryFile(@RequestParam("type") Integer type,
+                              @RequestParam("filePath") String filePath,
+                              HttpServletResponse response) {
+
+        boolean ret = deviceService.downloadBinaryFile(type, filePath, response);
+        if (ret) {
+            return Result.success("下载成功");
+        } else {
+            return Result.error("下载失败");
         }
     }
 
