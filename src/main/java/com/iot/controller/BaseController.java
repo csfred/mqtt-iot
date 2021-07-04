@@ -1,14 +1,12 @@
 package com.iot.controller;
 
+import com.alibaba.fastjson.JSON;
 import com.iot.entity.DeviceInfo;
 import com.iot.entity.StationInfo;
 import com.iot.service.DeviceService;
 import com.iot.utils.Result;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -20,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author cs
  * @date 2021/06/05
  */
+@CrossOrigin
 @RestController
 @RequestMapping("/base")
 public class BaseController {
@@ -33,13 +32,20 @@ public class BaseController {
     }
 
 
+    @PostMapping(value = "/testPost")
+    String testPost(@RequestBody StationInfo stationInfo) {
+        System.out.println("stationInfo=" + JSON.toJSONString(stationInfo));
+        return JSON.toJSONString(stationInfo);
+    }
+
+
     /**
      * 保存站点信息参数JSON串如下
      *
      * @param stationInfo
      * @return
      */
-    @RequestMapping("/saveStationInfo")
+    @RequestMapping(value = "/saveStationInfo")
     Result saveStationInfo(@RequestBody StationInfo stationInfo) {
         try {
             deviceService.saveStationInfo(stationInfo);
@@ -89,8 +95,8 @@ public class BaseController {
      * @param stationInfo
      * @return
      */
-    @RequestMapping("/updateStationInfo")
-    Result getStationInfoByLonLat(@RequestBody StationInfo stationInfo) {
+    @RequestMapping(value = "/updateStationInfo")
+    Result updateStationInfo(@RequestBody StationInfo stationInfo) {
         try {
             deviceService.updateStationInfo(stationInfo);
         } catch (Exception e) {
@@ -121,7 +127,7 @@ public class BaseController {
      * @param deviceInfo
      * @return
      */
-    @RequestMapping("/saveDeviceInfo")
+    @RequestMapping(value = "/saveDeviceInfo")
     Result saveDevice(@RequestBody DeviceInfo deviceInfo) {
         try {
             deviceService.saveDeviceInfo(deviceInfo);
@@ -153,7 +159,7 @@ public class BaseController {
      *
      * @return
      */
-    @RequestMapping("/updateDeviceInfo")
+    @RequestMapping(value = "/updateDeviceInfo")
     Result updateDeviceInfo(@RequestBody DeviceInfo deviceInfo) {
         try {
             deviceService.updateDeviceInfo(deviceInfo);
@@ -186,11 +192,11 @@ public class BaseController {
     Result uploadBinaryFile(@RequestParam("type") Integer type,
                             @RequestParam("binaryFile") MultipartFile binaryFile) {
 
-        boolean ret = deviceService.uploadBinaryFile(type, binaryFile);
-        if (ret) {
-            return Result.success("上传成功");
+        String relateFilePath = deviceService.uploadBinaryFile(type, binaryFile);
+        if (StringUtils.isEmpty(relateFilePath)) {
+            return Result.error("上传失败", "");
         } else {
-            return Result.error("上传失败");
+            return Result.success("上传成功", relateFilePath);
         }
     }
 
@@ -206,18 +212,4 @@ public class BaseController {
             return Result.error("下载失败");
         }
     }
-
-    @RequestMapping("/preivewBgImg")
-    Result downloadBinaryFile(@RequestParam("type") Integer type,
-                              @RequestParam("filePath") String filePath,
-                              HttpServletResponse response) {
-
-        boolean ret = deviceService.downloadBinaryFile(type, filePath, response);
-        if (ret) {
-            return Result.success("下载成功");
-        } else {
-            return Result.error("下载失败");
-        }
-    }
-
 }

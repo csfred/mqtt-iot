@@ -9,7 +9,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -137,12 +136,12 @@ public interface DeviceService {
      * @param binaryFile
      * @param type       类型 设备的1，水质的2....
      */
-    boolean uploadBinaryFile(Integer type, MultipartFile binaryFile);
+    String uploadBinaryFile(Integer type, MultipartFile binaryFile);
 
     /**
      * 下载文件
      *
-     * @param type 设备的1，水质的2....
+     * @param type     设备的1，水质的2....
      * @param filePath
      * @param response
      * @return

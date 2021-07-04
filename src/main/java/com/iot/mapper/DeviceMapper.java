@@ -30,7 +30,7 @@ public interface DeviceMapper {
      *
      * @param stationInfo
      */
-    void updateStationInfo(StationInfo stationInfo);
+    long updateStationInfo(StationInfo stationInfo);
 
     /**
      * 获取所有站点信息集合

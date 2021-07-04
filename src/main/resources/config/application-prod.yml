@@ -1,8 +1,10 @@
 logging:
-  file:
-    path: /opt/lot/logs
+  com.iot.mapper: debug
 
 spring:
+  resources:
+    static-locations: file:/data
+
   datasource:
     url: jdbc:mysql://8.140.106.126:3306/iotdb?useSSL=false&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
     username: root

@@ -1,5 +1,6 @@
 package com.iot.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.iot.entity.*;
 import com.iot.mapper.DeviceMapper;
@@ -10,6 +11,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -44,7 +46,9 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public void updateStationInfo(StationInfo stationInfo) {
-        deviceMapper.updateStationInfo(stationInfo);
+        System.out.println("======stationInfo=" + JSON.toJSONString(stationInfo));
+        long ret = deviceMapper.updateStationInfo(stationInfo);
+        System.out.println("======stationInfo=" + JSON.toJSONString(stationInfo) + "\n=====ret="+ret);
     }
 
     @Override
@@ -125,9 +129,10 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public boolean uploadBinaryFile(Integer type, MultipartFile binaryFile) {
+    public String uploadBinaryFile(Integer type, MultipartFile binaryFile) {
         StringBuilder pathBuilder = new StringBuilder();
         pathBuilder.append(uploadPath);
+        String relateFilePath = "";
         switch (type) {
             case 1:
                 //设备
@@ -136,6 +141,7 @@ public class DeviceServiceImpl implements DeviceService {
                 } else {
                     pathBuilder.append("/device/");
                 }
+                relateFilePath += "/device/";
                 break;
             case 2:
                 if (uploadPath.endsWith("/")) {
@@ -143,19 +149,23 @@ public class DeviceServiceImpl implements DeviceService {
                 } else {
                     pathBuilder.append("/water/");
                 }
+                relateFilePath += "/water/";
                 break;
             default:
                 pathBuilder = null;
                 break;
         }
         if (null == pathBuilder) {
-            return false;
+            return "";
         }
-        pathBuilder.append(LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"))).append("/");
+        String formatTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+        pathBuilder.append(formatTime).append("/");
+        relateFilePath += formatTime + "/";
         String targetFilePath = pathBuilder.toString();
 
         String fileName = binaryFile.getOriginalFilename();
         String fullFileName = targetFilePath + fileName;
+        relateFilePath += fileName;
         File targetFile = new File(fullFileName);
 
         FileOutputStream fileOutputStream = null;
@@ -171,7 +181,7 @@ public class DeviceServiceImpl implements DeviceService {
             IOUtils.copy(binaryFile.getInputStream(), fileOutputStream);
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return "";
         } finally {
             try {
                 fileOutputStream.close();
@@ -179,7 +189,7 @@ public class DeviceServiceImpl implements DeviceService {
                 e.printStackTrace();
             }
         }
-        return true;
+        return relateFilePath;
     }
 
     @Override
