@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.iot.entity.*;
 import com.iot.mapper.DeviceMapper;
 import com.iot.service.DeviceService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.apache.logging.log4j.util.StringBuilders;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
@@ -29,6 +30,7 @@ import java.util.UUID;
  * @author cs
  * @since 2020/11/17 15:55
  */
+@Slf4j
 @Service
 public class DeviceServiceImpl implements DeviceService {
 
@@ -41,14 +43,24 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public void saveStationInfo(StationInfo stationInfo) {
-        deviceMapper.saveStationInfo(stationInfo);
+        try {
+            log.debug("===saveStationInfo start== stationInfo=" + JSON.toJSONString(stationInfo));
+            long ret = deviceMapper.saveStationInfo(stationInfo);
+            log.debug("======saveStationInfo end =ret=" + ret);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
     @Override
     public void updateStationInfo(StationInfo stationInfo) {
-        System.out.println("======stationInfo=" + JSON.toJSONString(stationInfo));
-        long ret = deviceMapper.updateStationInfo(stationInfo);
-        System.out.println("======stationInfo=" + JSON.toJSONString(stationInfo) + "\n=====ret="+ret);
+        try {
+            log.debug("===stationInfo start== stationInfo=" + JSON.toJSONString(stationInfo));
+            long ret = deviceMapper.updateStationInfo(stationInfo);
+            log.debug("======stationInfo end =ret=" + ret);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
     @Override
@@ -60,7 +72,12 @@ public class DeviceServiceImpl implements DeviceService {
         if (page > 0) {
             page = page - 1;
         }
-        List<StationInfo> retList = deviceMapper.getPageAllStationInfo(page, pageSize, stationNameLike);
+        List<StationInfo> retList = null;
+        try {
+            retList = deviceMapper.getPageAllStationInfo(page, pageSize, stationNameLike);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
         JSONObject retObject = new JSONObject(8);
         retObject.put("total", total);
         retObject.put("dataList", retList);
@@ -69,27 +86,52 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public void deleteStationInfo(String stationNo) {
-        deviceMapper.deleteStationInfo(stationNo);
+        try {
+            deviceMapper.deleteStationInfo(stationNo);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
     @Override
     public void saveDevice(Device param) {
-        deviceMapper.saveDevice(param);
+        try {
+            deviceMapper.saveDevice(param);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
     @Override
     public void saveDeviceInfo(DeviceInfo deviceInfo) {
-        deviceMapper.saveDeviceInfo(deviceInfo);
+        try {
+            log.debug("===saveDeviceInfo start== deviceInfo=" + JSON.toJSONString(deviceInfo));
+            long ret = deviceMapper.saveDeviceInfo(deviceInfo);
+            log.debug("======saveDeviceInfo end =ret=" + ret);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
     @Override
     public List<DeviceInfo> getDeviceInfoByStationNo(String stationNo) {
-        return deviceMapper.getDeviceInfoByStationNo(stationNo);
+        try {
+            return deviceMapper.getDeviceInfoByStationNo(stationNo);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public void updateDeviceInfo(DeviceInfo deviceInfo) {
-        deviceMapper.updateDeviceInfo(deviceInfo);
+        try {
+            log.debug("===updateDeviceInfo start== deviceInfo=" + JSON.toJSONString(deviceInfo));
+            long ret = deviceMapper.updateDeviceInfo(deviceInfo);
+            log.debug("======updateDeviceInfo end =ret=" + ret);
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
     }
 
 

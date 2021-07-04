@@ -23,7 +23,7 @@ public interface DeviceMapper {
      *
      * @param stationInfo
      */
-    void saveStationInfo(StationInfo stationInfo);
+    long saveStationInfo(StationInfo stationInfo);
 
     /**
      * 根据站点编号修改站点信息
@@ -68,7 +68,7 @@ public interface DeviceMapper {
      *
      * @param deviceInfo
      */
-    void saveDeviceInfo(DeviceInfo deviceInfo);
+    long saveDeviceInfo(DeviceInfo deviceInfo);
 
     /**
      * 根据站点编号获取站点下所有设备
@@ -83,7 +83,7 @@ public interface DeviceMapper {
      *
      * @param deviceInfo
      */
-    void updateDeviceInfo(DeviceInfo deviceInfo);
+    long updateDeviceInfo(DeviceInfo deviceInfo);
 
     /**
      * 更新相同站点相同设备参数计数

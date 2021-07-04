@@ -14,7 +14,7 @@ spring:
 #    password: 123456
 
 mqtt:
-  host: tcp://8.140.106.126:1883
+  host: tcp://9.140.106.126:1883
   username: root
   password: Aa-654321
 

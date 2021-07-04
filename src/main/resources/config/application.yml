@@ -11,8 +11,8 @@ spring:
     name: iot-server
   profiles:
     #active: @spring.profiles.active@
-    active: dev
-    #active: prod
+    #active: dev
+    active: prod
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
