@@ -42,25 +42,25 @@ public class DeviceServiceImpl implements DeviceService {
 
 
     @Override
-    public void saveStationInfo(StationInfo stationInfo) {
+    public long saveStationInfo(StationInfo stationInfo) {
+        long ret = -1;
         try {
-            log.debug("===saveStationInfo start== stationInfo=" + JSON.toJSONString(stationInfo));
-            long ret = deviceMapper.saveStationInfo(stationInfo);
-            log.debug("======saveStationInfo end =ret=" + ret);
+            ret = deviceMapper.saveStationInfo(stationInfo);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("saveStationInfo stationInfo={}, errorMsg={}", JSON.toJSONString(stationInfo), e.getMessage());
         }
+        return ret;
     }
 
     @Override
-    public void updateStationInfo(StationInfo stationInfo) {
+    public long updateStationInfo(StationInfo stationInfo) {
+        long ret = -1;
         try {
-            log.debug("===stationInfo start== stationInfo=" + JSON.toJSONString(stationInfo));
-            long ret = deviceMapper.updateStationInfo(stationInfo);
-            log.debug("======stationInfo end =ret=" + ret);
+            ret = deviceMapper.updateStationInfo(stationInfo);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("updateStationInfo stationInfo={}, errorMsg={}", JSON.toJSONString(stationInfo), e.getMessage());
         }
+        return ret;
     }
 
     @Override
@@ -85,12 +85,14 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void deleteStationInfo(String stationNo) {
+    public long deleteStationInfo(String stationNo) {
+        long ret = -1;
         try {
-            deviceMapper.deleteStationInfo(stationNo);
+            ret = deviceMapper.deleteStationInfo(stationNo);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("deleteStationInfo stationNo={}, errorMsg={}", stationNo, e.getMessage());
         }
+        return ret;
     }
 
     @Override
@@ -103,14 +105,14 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void saveDeviceInfo(DeviceInfo deviceInfo) {
+    public long saveDeviceInfo(DeviceInfo deviceInfo) {
+        long ret = -1;
         try {
-            log.debug("===saveDeviceInfo start== deviceInfo=" + JSON.toJSONString(deviceInfo));
-            long ret = deviceMapper.saveDeviceInfo(deviceInfo);
-            log.debug("======saveDeviceInfo end =ret=" + ret);
+            ret = deviceMapper.saveDeviceInfo(deviceInfo);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("saveDeviceInfo deviceInfo={}, errorMsg={}", JSON.toJSONString(deviceInfo), e.getMessage());
         }
+        return ret;
     }
 
     @Override
@@ -124,14 +126,14 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public void updateDeviceInfo(DeviceInfo deviceInfo) {
+    public long updateDeviceInfo(DeviceInfo deviceInfo) {
+        long ret = -1;
         try {
-            log.debug("===updateDeviceInfo start== deviceInfo=" + JSON.toJSONString(deviceInfo));
-            long ret = deviceMapper.updateDeviceInfo(deviceInfo);
-            log.debug("======updateDeviceInfo end =ret=" + ret);
+            ret = deviceMapper.updateDeviceInfo(deviceInfo);
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error("updateDeviceInfo deviceInfo={}, errorMsg={}", JSON.toJSONString(deviceInfo), e.getMessage());
         }
+        return ret;
     }
 
 

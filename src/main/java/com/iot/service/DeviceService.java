@@ -25,14 +25,14 @@ public interface DeviceService {
      *
      * @param stationInfo
      */
-    void saveStationInfo(StationInfo stationInfo);
+    long saveStationInfo(StationInfo stationInfo);
 
     /**
      * 根据站点编号修改站点信息
      *
      * @param stationInfo
      */
-    void updateStationInfo(StationInfo stationInfo);
+    long updateStationInfo(StationInfo stationInfo);
 
 
     /**
@@ -52,7 +52,7 @@ public interface DeviceService {
      *
      * @param stationNo
      */
-    void deleteStationInfo(String stationNo);
+    long deleteStationInfo(String stationNo);
 
     /**
      * 存储设备主信息
@@ -66,7 +66,7 @@ public interface DeviceService {
      *
      * @param deviceInfo
      */
-    void saveDeviceInfo(DeviceInfo deviceInfo);
+    long saveDeviceInfo(DeviceInfo deviceInfo);
 
     /**
      * 根据站点编号查询所有设备信息
@@ -81,7 +81,7 @@ public interface DeviceService {
      *
      * @param deviceInfo
      */
-    void updateDeviceInfo(DeviceInfo deviceInfo);
+    long updateDeviceInfo(DeviceInfo deviceInfo);
 
 
     /**

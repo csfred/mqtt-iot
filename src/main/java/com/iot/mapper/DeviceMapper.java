@@ -54,7 +54,7 @@ public interface DeviceMapper {
      *
      * @param stationNo
      */
-    void deleteStationInfo(@Param("stationNo") String stationNo);
+    long deleteStationInfo(@Param("stationNo") String stationNo);
 
     /**
      * 保存设备信息

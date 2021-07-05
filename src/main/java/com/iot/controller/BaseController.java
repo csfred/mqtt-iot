@@ -34,7 +34,6 @@ public class BaseController {
 
     @PostMapping(value = "/testPost")
     String testPost(@RequestBody StationInfo stationInfo) {
-        System.out.println("stationInfo=" + JSON.toJSONString(stationInfo));
         return JSON.toJSONString(stationInfo);
     }
 
@@ -47,12 +46,11 @@ public class BaseController {
      */
     @RequestMapping(value = "/saveStationInfo")
     Result saveStationInfo(@RequestBody StationInfo stationInfo) {
-        try {
-            deviceService.saveStationInfo(stationInfo);
-        } catch (Exception e) {
-            return Result.error(e.getMessage());
+        long ret = deviceService.saveStationInfo(stationInfo);
+        if (ret < 0) {
+            return Result.error("保存失败，服务器异常");
         }
-        return Result.success();
+        return Result.success("保存成功");
     }
 
     /**
@@ -81,10 +79,9 @@ public class BaseController {
      */
     @RequestMapping("/deleteStationInfo")
     Result deleteStationInfo(@RequestParam("stationNo") String stationNo) {
-        try {
-            deviceService.deleteStationInfo(stationNo);
-        } catch (Exception e) {
-            return Result.error(e.getMessage());
+        long ret = deviceService.deleteStationInfo(stationNo);
+        if (ret < 0) {
+            return Result.error("删除失败，服务器异常");
         }
         return Result.success("请求成功");
     }
@@ -97,10 +94,9 @@ public class BaseController {
      */
     @RequestMapping(value = "/updateStationInfo")
     Result updateStationInfo(@RequestBody StationInfo stationInfo) {
-        try {
-            deviceService.updateStationInfo(stationInfo);
-        } catch (Exception e) {
-            return Result.error(e.getMessage());
+        long ret = deviceService.updateStationInfo(stationInfo);
+        if (ret < 0) {
+            return Result.error("更新失败，服务器异常");
         }
         return Result.success("请求成功");
     }
@@ -128,11 +124,10 @@ public class BaseController {
      * @return
      */
     @RequestMapping(value = "/saveDeviceInfo")
-    Result saveDevice(@RequestBody DeviceInfo deviceInfo) {
-        try {
-            deviceService.saveDeviceInfo(deviceInfo);
-        } catch (Exception e) {
-            return Result.error(e.getMessage());
+    Result saveDeviceInfo(@RequestBody DeviceInfo deviceInfo) {
+        long ret = deviceService.saveDeviceInfo(deviceInfo);
+        if (ret < 0) {
+            return Result.error("保存失败，服务器异常");
         }
         return Result.success("请求成功");
     }
@@ -161,10 +156,9 @@ public class BaseController {
      */
     @RequestMapping(value = "/updateDeviceInfo")
     Result updateDeviceInfo(@RequestBody DeviceInfo deviceInfo) {
-        try {
-            deviceService.updateDeviceInfo(deviceInfo);
-        } catch (Exception e) {
-            return Result.error(e.getMessage());
+        long ret = deviceService.updateDeviceInfo(deviceInfo);
+        if (ret < 0) {
+            return Result.error("更新失败，服务器异常");
         }
         return Result.success("请求成功");
     }
