@@ -57,6 +57,14 @@ public interface DeviceMapper {
     long deleteStationInfo(@Param("stationNo") String stationNo);
 
     /**
+     * 批量删除设备
+     *
+     * @param devNos
+     * @return
+     */
+    long deleteDeviceInfo(@Param("devNos") List<Long> devNos);
+
+    /**
      * 保存设备信息
      *
      * @param param 参数

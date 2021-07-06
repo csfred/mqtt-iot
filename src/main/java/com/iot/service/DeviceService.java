@@ -55,6 +55,15 @@ public interface DeviceService {
     long deleteStationInfo(String stationNo);
 
     /**
+     * 删除站点小该底图下所有设备
+     *
+     * @param stationNo
+     * @param bgDevImg
+     * @return
+     */
+    long deleteBgDevImg(String stationNo, String bgDevImg);
+
+    /**
      * 存储设备主信息
      *
      * @param param 参数
@@ -74,7 +83,7 @@ public interface DeviceService {
      * @param stationNo
      * @return
      */
-    List<DeviceInfo> getDeviceInfoByStationNo(String stationNo);
+    List<DeviceInfo> getDeviceInfoByStationNo(String stationNo, String bgDevImg);
 
     /**
      * 更新设备信息

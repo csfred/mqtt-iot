@@ -5,12 +5,15 @@ import com.alibaba.fastjson.JSONObject;
 import com.iot.entity.*;
 import com.iot.mapper.DeviceMapper;
 import com.iot.service.DeviceService;
+import com.iot.utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
 import org.apache.logging.log4j.util.StringBuilders;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -21,6 +24,7 @@ import java.io.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -96,6 +100,32 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
+    public long deleteBgDevImg(String stationNo, String bgDevImg) {
+        long ret = -1;
+        try {
+            List<DeviceInfo> dataListTmp = deviceMapper.getDeviceInfoByStationNo(stationNo);
+            if (CollectionUtils.isEmpty(dataListTmp)) {
+                return 0;
+            }
+            List<Long> devNoList = new ArrayList<>(8);
+            for (DeviceInfo deviceInfo : dataListTmp) {
+                JSONObject deviceVector = JSON.parseObject(deviceInfo.getDeviceVector());
+                if (deviceVector != null && !deviceVector.isEmpty()) {
+                    if (bgDevImg.equalsIgnoreCase(deviceVector.getString("bgDevImg"))) {
+                        devNoList.add(deviceInfo.getDevNo());
+                    }
+                }
+            }
+            if (!CollectionUtils.isEmpty(devNoList)) {
+                ret = deviceMapper.deleteDeviceInfo(devNoList);
+            }
+        } catch (Exception e) {
+            log.error("deleteBgDevImg stationNo={}, bgDevImg={}, errorMsg={}", stationNo, bgDevImg, e.getMessage());
+        }
+        return ret;
+    }
+
+    @Override
     public void saveDevice(Device param) {
         try {
             deviceMapper.saveDevice(param);
@@ -116,9 +146,25 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public List<DeviceInfo> getDeviceInfoByStationNo(String stationNo) {
+    public List<DeviceInfo> getDeviceInfoByStationNo(String stationNo, String bgDevImg) {
+        List<DeviceInfo> dataList = new ArrayList<>(8);
         try {
-            return deviceMapper.getDeviceInfoByStationNo(stationNo);
+            List<DeviceInfo> dataListTmp = deviceMapper.getDeviceInfoByStationNo(stationNo);
+            if (StringUtils.isEmpty(bgDevImg)) {
+                dataList.addAll(dataListTmp);
+            } else {
+                if (!CollectionUtils.isEmpty(dataListTmp)) {
+                    for (DeviceInfo deviceInfo : dataListTmp) {
+                        JSONObject deviceVector = JSON.parseObject(deviceInfo.getDeviceVector());
+                        if (deviceVector != null && !deviceVector.isEmpty()) {
+                            if (bgDevImg.equalsIgnoreCase(deviceVector.getString("bgDevImg"))) {
+                                dataList.add(deviceInfo);
+                            }
+                        }
+                    }
+                }
+            }
+            return dataList;
         } catch (Exception e) {
             log.error(e.getMessage());
             return null;

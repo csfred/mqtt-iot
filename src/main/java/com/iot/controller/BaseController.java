@@ -86,6 +86,18 @@ public class BaseController {
         return Result.success("请求成功");
     }
 
+
+    @RequestMapping("/deleteBgDevImg")
+    Result deleteBgDevImg(@RequestParam("stationNo") String stationNo,
+                          @RequestParam("bgDevImg") String bgDevImg) {
+
+        long ret = deviceService.deleteBgDevImg(stationNo, bgDevImg);
+        if (ret < 0) {
+            return Result.error("删除失败，服务器异常");
+        }
+        return Result.success("请求成功");
+    }
+
     /**
      * 根据站点编号修改站点信息
      *
@@ -139,14 +151,15 @@ public class BaseController {
      * @return
      */
     @RequestMapping("/getDeviceInfoByStationNo")
-    Result getDeviceInfoByStationNo(@RequestParam("stationNo") String stationNo) {
-        Object data;
+    Result getDeviceInfoByStationNo(@RequestParam(value = "stationNo") String stationNo,
+                                    @RequestParam(value = "stationNo", required = false, defaultValue = "") String bgDevImg) {
+        Object dataList;
         try {
-            data = deviceService.getDeviceInfoByStationNo(stationNo);
+            dataList = deviceService.getDeviceInfoByStationNo(stationNo, bgDevImg);
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }
-        return Result.success("请求成功", data);
+        return Result.success("请求成功", dataList);
     }
 
     /**
