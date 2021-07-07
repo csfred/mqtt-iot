@@ -89,7 +89,7 @@
 
     <insert id="saveDeviceInfo" parameterType="com.iot.entity.DeviceInfo">
         insert into t_device_info(f_station_no, f_dev_name, f_dev_type, f_dev_var_fields, f_dev_vector)
-        values (#{stationNo}, #{devName}, #{devType}, MD5(f_dev_var_fields), #{deviceVector})
+        values (#{stationNo}, #{devName}, #{devType}, #{devVarFields}, #{deviceVector})
     </insert>
 
     <delete id="deleteDeviceInfo" parameterType="java.util.List">
