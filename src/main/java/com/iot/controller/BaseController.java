@@ -152,7 +152,7 @@ public class BaseController {
      */
     @RequestMapping("/getDeviceInfoByStationNo")
     Result getDeviceInfoByStationNo(@RequestParam(value = "stationNo") String stationNo,
-                                    @RequestParam(value = "stationNo", required = false, defaultValue = "") String bgDevImg) {
+                                    @RequestParam(value = "bgDevImg", required = false, defaultValue = "") String bgDevImg) {
         Object dataList;
         try {
             dataList = deviceService.getDeviceInfoByStationNo(stationNo, bgDevImg);
