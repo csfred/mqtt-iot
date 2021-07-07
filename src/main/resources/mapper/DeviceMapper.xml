@@ -14,6 +14,25 @@
                 #{connectTel}, #{bgDevImgPath}, #{bgWaterImgPath}, #{remarks1}, #{remarks2}, #{remarks3})
     </insert>
 
+    <select id="getStationInfoByNo" parameterType="java.lang.String" resultType="com.iot.entity.StationInfo">
+        select f_station_no        as stationNo,
+               f_station_name      as stationName,
+               f_station_lon       as stationLon,
+               f_station_lat       as stationLat,
+               f_station_address   as stationAddress,
+               f_process_tech      as processTech,
+               f_process_scale     as processScale,
+               f_dev_ops_num       as devOpsNum,
+               f_contact_tel       as connectTel,
+               f_bg_dev_img_path   as bgDevImgPath,
+               f_bg_water_img_path as bgWaterImgPath,
+               f_remarks1          as remarks1,
+               f_remarks2          as remarks2,
+               f_remarks3          as remarks3,
+        from t_station_info
+        where f_station_no = #{stationNo}
+    </select>
+
     <update id="updateStationInfo" parameterType="com.iot.entity.StationInfo">
         update t_station_info
         set f_station_name      = #{stationName},

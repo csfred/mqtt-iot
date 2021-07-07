@@ -87,6 +87,14 @@ public interface DeviceMapper {
     List<DeviceInfo> getDeviceInfoByStationNo(@Param("stationNo") String stationNo);
 
     /**
+     * 根据站点编号查询站点信息
+     * @param stationNo
+     * @return
+     */
+
+    StationInfo getStationInfoByNo(@Param("stationNo") String stationNo);
+
+    /**
      * 根据站点编号，设备编号更新设备信息
      *
      * @param deviceInfo

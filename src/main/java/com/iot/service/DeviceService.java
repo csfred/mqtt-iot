@@ -61,7 +61,7 @@ public interface DeviceService {
      * @param bgDevImg
      * @return
      */
-    long deleteBgDevImg(String stationNo, String bgDevImg);
+    long deleteBgDevImg(String stationNo, String bgDevImg, Long devNo);
 
     /**
      * 存储设备主信息

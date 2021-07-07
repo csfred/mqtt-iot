@@ -89,9 +89,10 @@ public class BaseController {
 
     @RequestMapping("/deleteBgDevImg")
     Result deleteBgDevImg(@RequestParam("stationNo") String stationNo,
-                          @RequestParam("bgDevImg") String bgDevImg) {
+                          @RequestParam("bgDevImg") String bgDevImg,
+                          @RequestParam(value = "devNo", required = false) Long devNo) {
 
-        long ret = deviceService.deleteBgDevImg(stationNo, bgDevImg);
+        long ret = deviceService.deleteBgDevImg(stationNo, bgDevImg, devNo);
         if (ret < 0) {
             return Result.error("删除失败，服务器异常");
         }

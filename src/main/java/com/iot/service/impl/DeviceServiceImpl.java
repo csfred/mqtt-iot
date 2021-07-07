@@ -1,6 +1,7 @@
 package com.iot.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.iot.entity.*;
 import com.iot.mapper.DeviceMapper;
@@ -100,9 +101,14 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public long deleteBgDevImg(String stationNo, String bgDevImg) {
+    public long deleteBgDevImg(String stationNo, String bgDevImg, Long devNo) {
         long ret = -1;
         try {
+            if (null != devNo) {
+                List<Long> devNoList = new ArrayList<>(4);
+                devNoList.add(devNo);
+                return deviceMapper.deleteDeviceInfo(devNoList);
+            }
             List<DeviceInfo> dataListTmp = deviceMapper.getDeviceInfoByStationNo(stationNo);
             if (CollectionUtils.isEmpty(dataListTmp)) {
                 return 0;
@@ -118,6 +124,15 @@ public class DeviceServiceImpl implements DeviceService {
             }
             if (!CollectionUtils.isEmpty(devNoList)) {
                 ret = deviceMapper.deleteDeviceInfo(devNoList);
+            }
+            StationInfo stationInfo = deviceMapper.getStationInfoByNo(stationNo);
+            if (null != stationInfo) {
+                JSONArray jsonArray = JSON.parseArray(stationInfo.getBgDevImgPath());
+                if (!CollectionUtils.isEmpty(jsonArray) && jsonArray.contains(bgDevImg)) {
+                    jsonArray.remove(bgDevImg);
+                    stationInfo.setBgDevImgPath(jsonArray.toJSONString());
+                    deviceMapper.updateStationInfo(stationInfo);
+                }
             }
         } catch (Exception e) {
             log.error("deleteBgDevImg stationNo={}, bgDevImg={}, errorMsg={}", stationNo, bgDevImg, e.getMessage());
