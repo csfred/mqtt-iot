@@ -3,7 +3,7 @@ logging:
 
 spring:
   resources:
-    static-locations: file:D:/data
+    static-locations: file:D:/data/backgroundImage/
 
   datasource:
     url: jdbc:mysql://192.168.1.9:3306/iotdb?useSSL=false&useUnicode=true&characterEncoding=utf8&allowMultiQueries=true
@@ -19,4 +19,4 @@ mqtt:
   password: Aa-654321
 
 upload:
-  path: D:/data/
+  path: D:/data/backgroundImage/

@@ -263,7 +263,7 @@ public class DeviceServiceImpl implements DeviceService {
 
         // 取得文件的后缀名。
         String ext = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase(Locale.ROOT);
-        String targetFileName = UUID.randomUUID().toString().replaceAll("-", "") + ext;
+        String targetFileName = UUID.randomUUID().toString().replaceAll("-", "") + "."+ext;
         pathBuilder.append(targetFileName);
         String fullFileName = pathBuilder.toString();
 

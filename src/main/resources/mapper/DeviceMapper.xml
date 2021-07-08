@@ -28,7 +28,7 @@
                f_bg_water_img_path as bgWaterImgPath,
                f_remarks1          as remarks1,
                f_remarks2          as remarks2,
-               f_remarks3          as remarks3,
+               f_remarks3          as remarks3
         from t_station_info
         where f_station_no = #{stationNo}
     </select>
