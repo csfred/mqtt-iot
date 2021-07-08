@@ -27,6 +27,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 
 /**
@@ -125,15 +126,31 @@ public class DeviceServiceImpl implements DeviceService {
             if (!CollectionUtils.isEmpty(devNoList)) {
                 ret = deviceMapper.deleteDeviceInfo(devNoList);
             }
-            StationInfo stationInfo = deviceMapper.getStationInfoByNo(stationNo);
-            if (null != stationInfo) {
-                JSONArray jsonArray = JSON.parseArray(stationInfo.getBgDevImgPath());
-                if (!CollectionUtils.isEmpty(jsonArray) && jsonArray.contains(bgDevImg)) {
-                    jsonArray.remove(bgDevImg);
-                    stationInfo.setBgDevImgPath(jsonArray.toJSONString());
-                    deviceMapper.updateStationInfo(stationInfo);
+            if (ret > 0) {
+                StringBuilder pathBuilder = new StringBuilder();
+                pathBuilder.append(uploadPath);
+
+                if (bgDevImg.startsWith("/")) {
+                    pathBuilder.append(bgDevImg.substring(1));
+                } else {
+                    pathBuilder.append(bgDevImg);
+                }
+                File deleteFile = new File(pathBuilder.toString());
+                if (deleteFile.isFile() && deleteFile.exists()) {
+                    deleteFile.delete();
                 }
             }
+            StationInfo stationInfo = deviceMapper.getStationInfoByNo(stationNo);
+            if (null == stationInfo) {
+                return ret;
+            }
+            JSONArray jsonArray = JSON.parseArray(stationInfo.getBgDevImgPath());
+            if (!CollectionUtils.isEmpty(jsonArray) && jsonArray.contains(bgDevImg)) {
+                jsonArray.remove(bgDevImg);
+                stationInfo.setBgDevImgPath(jsonArray.toJSONString());
+                deviceMapper.updateStationInfo(stationInfo);
+            }
+
         } catch (Exception e) {
             log.error("deleteBgDevImg stationNo={}, bgDevImg={}, errorMsg={}", stationNo, bgDevImg, e.getMessage());
         }
@@ -234,43 +251,22 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public String uploadBinaryFile(Integer type, MultipartFile binaryFile) {
+    public String uploadBinaryFile(MultipartFile binaryFile) {
         StringBuilder pathBuilder = new StringBuilder();
         pathBuilder.append(uploadPath);
-        String relateFilePath = "";
-        switch (type) {
-            case 1:
-                //设备
-                if (uploadPath.endsWith("/")) {
-                    pathBuilder.append("device/");
-                } else {
-                    pathBuilder.append("/device/");
-                }
-                relateFilePath += "/device/";
-                break;
-            case 2:
-                if (uploadPath.endsWith("/")) {
-                    pathBuilder.append("water/");
-                } else {
-                    pathBuilder.append("/water/");
-                }
-                relateFilePath += "/water/";
-                break;
-            default:
-                pathBuilder = null;
-                break;
+
+        if (!pathBuilder.toString().endsWith("/")) {
+            pathBuilder.append("/");
         }
-        if (null == pathBuilder) {
-            return "";
-        }
-        String formatTime = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
-        pathBuilder.append(formatTime).append("/");
-        relateFilePath += formatTime + "/";
-        String targetFilePath = pathBuilder.toString();
 
         String fileName = binaryFile.getOriginalFilename();
-        String fullFileName = targetFilePath + fileName;
-        relateFilePath += fileName;
+
+        // 取得文件的后缀名。
+        String ext = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase(Locale.ROOT);
+        String targetFileName = UUID.randomUUID().toString().replaceAll("-", "") + ext;
+        pathBuilder.append(targetFileName);
+        String fullFileName = pathBuilder.toString();
+
         File targetFile = new File(fullFileName);
 
         FileOutputStream fileOutputStream = null;
@@ -294,37 +290,15 @@ public class DeviceServiceImpl implements DeviceService {
                 e.printStackTrace();
             }
         }
-        return relateFilePath;
+        return targetFileName;
     }
 
     @Override
-    public boolean downloadBinaryFile(Integer type, String filePath, HttpServletResponse response) {
+    public boolean downloadBinaryFile(String filePath, HttpServletResponse response) {
         try {
             StringBuilder pathBuilder = new StringBuilder();
             pathBuilder.append(uploadPath);
-            switch (type) {
-                case 1:
-                    //设备
-                    if (uploadPath.endsWith("/")) {
-                        pathBuilder.append("device/");
-                    } else {
-                        pathBuilder.append("/device/");
-                    }
-                    break;
-                case 2:
-                    if (uploadPath.endsWith("/")) {
-                        pathBuilder.append("water/");
-                    } else {
-                        pathBuilder.append("/water/");
-                    }
-                    break;
-                default:
-                    pathBuilder = null;
-                    break;
-            }
-            if (null == pathBuilder) {
-                return false;
-            }
+
             if (filePath.startsWith("/")) {
                 pathBuilder.append(filePath.substring(1));
             } else {
@@ -336,7 +310,7 @@ public class DeviceServiceImpl implements DeviceService {
             // 取得文件名。
             String filename = file.getName();
             // 取得文件的后缀名。
-            String ext = filename.substring(filename.lastIndexOf(".") + 1).toUpperCase();
+            String ext = filename.substring(filename.lastIndexOf(".") + 1).toLowerCase(Locale.ROOT);
             // 以流的形式下载文件。
             InputStream fis = new BufferedInputStream(new FileInputStream(fullFileName));
             byte[] buffer = new byte[fis.available()];

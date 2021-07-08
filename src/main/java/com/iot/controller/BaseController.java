@@ -197,10 +197,9 @@ public class BaseController {
     }
 
     @RequestMapping("/uploadBinaryFile")
-    Result uploadBinaryFile(@RequestParam("type") Integer type,
-                            @RequestParam("binaryFile") MultipartFile binaryFile) {
+    Result uploadBinaryFile(@RequestParam("binaryFile") MultipartFile binaryFile) {
 
-        String relateFilePath = deviceService.uploadBinaryFile(type, binaryFile);
+        String relateFilePath = deviceService.uploadBinaryFile(binaryFile);
         if (StringUtils.isEmpty(relateFilePath)) {
             return Result.error("上传失败", "");
         } else {
@@ -209,11 +208,10 @@ public class BaseController {
     }
 
     @RequestMapping("/downloadBinaryFile")
-    Result downloadBinaryFile(@RequestParam("type") Integer type,
-                              @RequestParam("filePath") String filePath,
+    Result downloadBinaryFile(@RequestParam("filePath") String filePath,
                               HttpServletResponse response) {
 
-        boolean ret = deviceService.downloadBinaryFile(type, filePath, response);
+        boolean ret = deviceService.downloadBinaryFile(filePath, response);
         if (ret) {
             return Result.success("下载成功");
         } else {

@@ -51,6 +51,7 @@ public interface DeviceService {
      * 根据站点编号删除站点信息
      *
      * @param stationNo
+     * @return
      */
     long deleteStationInfo(String stationNo);
 
@@ -59,6 +60,7 @@ public interface DeviceService {
      *
      * @param stationNo
      * @param bgDevImg
+     * @param devNo
      * @return
      */
     long deleteBgDevImg(String stationNo, String bgDevImg, Long devNo);
@@ -143,18 +145,16 @@ public interface DeviceService {
      * 文件上传
      *
      * @param binaryFile
-     * @param type       类型 设备的1，水质的2....
      */
-    String uploadBinaryFile(Integer type, MultipartFile binaryFile);
+    String uploadBinaryFile(MultipartFile binaryFile);
 
     /**
      * 下载文件
      *
-     * @param type     设备的1，水质的2....
      * @param filePath
      * @param response
      * @return
      */
-    boolean downloadBinaryFile(Integer type, String filePath, HttpServletResponse response);
+    boolean downloadBinaryFile(String filePath, HttpServletResponse response);
 
 }
