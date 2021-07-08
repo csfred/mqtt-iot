@@ -115,6 +115,7 @@ public class DeviceServiceImpl implements DeviceService {
             if (CollectionUtils.isEmpty(dataListTmp)) {
                 return 0;
             }
+            log.error("deleteBgDevImg dataListTmp={}", JSON.toJSONString(dataListTmp));
             List<Long> devNoList = new ArrayList<>(8);
             for (DeviceInfo deviceInfo : dataListTmp) {
                 JSONObject deviceVector = JSON.parseObject(deviceInfo.getDeviceVector());
@@ -125,6 +126,7 @@ public class DeviceServiceImpl implements DeviceService {
                 }
             }
             if (!CollectionUtils.isEmpty(devNoList)) {
+                log.error("deleteBgDevImg devNoList={}", JSON.toJSONString(devNoList));
                 ret = deviceMapper.deleteDeviceInfo(devNoList);
             }
             if (ret > 0) {
@@ -138,17 +140,20 @@ public class DeviceServiceImpl implements DeviceService {
                 }
                 File deleteFile = new File(pathBuilder.toString());
                 if (deleteFile.isFile() && deleteFile.exists()) {
-                    deleteFile.delete();
+                    boolean retDel = deleteFile.delete();
+                    log.error("deleteBgDevImg retDel={}", retDel);
                 }
             }
             StationInfo stationInfo = deviceMapper.getStationInfoByNo(stationNo);
             if (null == stationInfo) {
                 return ret;
             }
+            log.error("deleteBgDevImg getBgDevImgPath={}", stationInfo.getBgDevImgPath());
             JSONArray jsonArray = JSON.parseArray(stationInfo.getBgDevImgPath());
             if (!CollectionUtils.isEmpty(jsonArray) && jsonArray.contains(bgDevImg)) {
                 jsonArray.remove(bgDevImg);
                 stationInfo.setBgDevImgPath(jsonArray.toJSONString());
+                log.error("deleteBgDevImg jsonArray={}", jsonArray.toJSONString());
                 deviceMapper.updateStationInfo(stationInfo);
             }
 
@@ -156,6 +161,16 @@ public class DeviceServiceImpl implements DeviceService {
             log.error("deleteBgDevImg stationNo={}, bgDevImg={}, errorMsg={}", stationNo, bgDevImg, e.getMessage());
         }
         return ret;
+    }
+
+    public static void main(String[] args) {
+        String bgImg = "1e66097b8e814d55a881cc32f82b28b9.jpg";
+        String test = "[\"1e66097b8e814d55a881cc32f82b28b9.jpg\"]";
+        JSONArray jsonArray = JSON.parseArray(test);
+
+        if (!CollectionUtils.isEmpty(jsonArray) && jsonArray.contains(bgImg)) {
+            System.out.println("aaa");
+        }
     }
 
     @Override
