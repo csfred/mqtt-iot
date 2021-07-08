@@ -163,16 +163,6 @@ public class DeviceServiceImpl implements DeviceService {
         return ret;
     }
 
-    public static void main(String[] args) {
-        String bgImg = "1e66097b8e814d55a881cc32f82b28b9.jpg";
-        String test = "[\"1e66097b8e814d55a881cc32f82b28b9.jpg\"]";
-        JSONArray jsonArray = JSON.parseArray(test);
-
-        if (!CollectionUtils.isEmpty(jsonArray) && jsonArray.contains(bgImg)) {
-            System.out.println("aaa");
-        }
-    }
-
     @Override
     public void saveDevice(Device param) {
         try {
