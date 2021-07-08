@@ -106,6 +106,7 @@ public class DeviceServiceImpl implements DeviceService {
     public long deleteBgDevImg(String stationNo, String bgDevImg, Long devNo) {
         long ret = -1;
         try {
+            log.error("deleteBgDevImg stationNo={}, bgDevImg={}, devNo={}", stationNo, bgDevImg, devNo);
             if (null != devNo) {
                 List<Long> devNoList = new ArrayList<>(4);
                 devNoList.add(devNo);
