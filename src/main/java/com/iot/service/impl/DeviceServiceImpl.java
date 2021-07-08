@@ -62,6 +62,7 @@ public class DeviceServiceImpl implements DeviceService {
     public long updateStationInfo(StationInfo stationInfo) {
         long ret = -1;
         try {
+            log.error("updateStationInfo stationInfo={}, bgDevImgPath={}", JSON.toJSONString(stationInfo), stationInfo.getBgDevImgPath());
             ret = deviceMapper.updateStationInfo(stationInfo);
         } catch (Exception e) {
             log.error("updateStationInfo stationInfo={}, errorMsg={}", JSON.toJSONString(stationInfo), e.getMessage());
@@ -263,7 +264,7 @@ public class DeviceServiceImpl implements DeviceService {
 
         // 取得文件的后缀名。
         String ext = fileName.substring(fileName.lastIndexOf(".") + 1).toLowerCase(Locale.ROOT);
-        String targetFileName = UUID.randomUUID().toString().replaceAll("-", "") + "."+ext;
+        String targetFileName = UUID.randomUUID().toString().replaceAll("-", "") + "." + ext;
         pathBuilder.append(targetFileName);
         String fullFileName = pathBuilder.toString();
 

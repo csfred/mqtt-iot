@@ -107,7 +107,6 @@ public class BaseController {
      */
     @RequestMapping(value = "/updateStationInfo")
     Result updateStationInfo(@RequestBody StationInfo stationInfo) {
-        System.out.println("stationInfo" + JSON.toJSONString(stationInfo));
         long ret = deviceService.updateStationInfo(stationInfo);
         if (ret < 0) {
             return Result.error("更新失败，服务器异常");
