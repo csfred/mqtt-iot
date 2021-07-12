@@ -6,17 +6,14 @@ import com.alibaba.fastjson.JSONObject;
 import com.iot.entity.*;
 import com.iot.mapper.DeviceMapper;
 import com.iot.service.DeviceService;
-import com.iot.utils.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
-import org.apache.logging.log4j.util.StringBuilders;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
@@ -24,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -62,7 +58,6 @@ public class DeviceServiceImpl implements DeviceService {
     public long updateStationInfo(StationInfo stationInfo) {
         long ret = -1;
         try {
-            log.error("updateStationInfo stationInfo={}, bgDevImgPath={}", JSON.toJSONString(stationInfo), stationInfo.getBgDevImgPath());
             ret = deviceMapper.updateStationInfo(stationInfo);
         } catch (Exception e) {
             log.error("updateStationInfo stationInfo={}, errorMsg={}", JSON.toJSONString(stationInfo), e.getMessage());
@@ -106,7 +101,6 @@ public class DeviceServiceImpl implements DeviceService {
     public long deleteBgDevImg(String stationNo, String bgDevImg, Long devNo) {
         long ret = -1;
         try {
-            log.error("deleteBgDevImg stationNo={}, bgDevImg={}, devNo={}", stationNo, bgDevImg, devNo);
             if (null != devNo) {
                 List<Long> devNoList = new ArrayList<>(4);
                 devNoList.add(devNo);
@@ -116,7 +110,6 @@ public class DeviceServiceImpl implements DeviceService {
             if (CollectionUtils.isEmpty(dataListTmp)) {
                 return 0;
             }
-            log.error("deleteBgDevImg dataListTmp={}", JSON.toJSONString(dataListTmp));
             List<Long> devNoList = new ArrayList<>(8);
             for (DeviceInfo deviceInfo : dataListTmp) {
                 JSONObject deviceVector = JSON.parseObject(deviceInfo.getDeviceVector());
@@ -127,7 +120,6 @@ public class DeviceServiceImpl implements DeviceService {
                 }
             }
             if (!CollectionUtils.isEmpty(devNoList)) {
-                log.error("deleteBgDevImg devNoList={}", JSON.toJSONString(devNoList));
                 ret = deviceMapper.deleteDeviceInfo(devNoList);
             }
             if (ret > 0) {
@@ -149,12 +141,10 @@ public class DeviceServiceImpl implements DeviceService {
             if (null == stationInfo) {
                 return ret;
             }
-            log.error("deleteBgDevImg getBgDevImgPath={}", stationInfo.getBgDevImgPath());
             JSONArray jsonArray = JSON.parseArray(stationInfo.getBgDevImgPath());
             if (!CollectionUtils.isEmpty(jsonArray) && jsonArray.contains(bgDevImg)) {
                 jsonArray.remove(bgDevImg);
                 stationInfo.setBgDevImgPath(jsonArray.toJSONString());
-                log.error("deleteBgDevImg jsonArray={}", jsonArray.toJSONString());
                 deviceMapper.updateStationInfo(stationInfo);
             }
 

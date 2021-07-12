@@ -2,8 +2,10 @@ package com.iot.controller;
 
 import com.alibaba.fastjson.JSON;
 import com.iot.entity.DeviceInfo;
+import com.iot.entity.MonitorInfo;
 import com.iot.entity.StationInfo;
 import com.iot.service.DeviceService;
+import com.iot.service.MonitorService;
 import com.iot.utils.Result;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +27,9 @@ public class BaseController {
 
     @Resource
     private DeviceService deviceService;
+
+    @Resource
+    private MonitorService monitorService;
 
     @RequestMapping("/test")
     String testController() {
@@ -217,5 +222,87 @@ public class BaseController {
         } else {
             return Result.error("下载失败");
         }
+    }
+
+
+    /**
+     * 保存摄像机信息
+     *
+     * @param monitorInfo
+     * @return
+     */
+    @RequestMapping("/saveMonitorInfo")
+    Result saveMonitorInfo(@RequestBody MonitorInfo monitorInfo) {
+
+        long ret = monitorService.saveMonitorInfo(monitorInfo);
+        if (ret < 0) {
+            return Result.error("保存摄像机信息失败");
+        } else {
+            return Result.success("保存摄像机信息成功");
+        }
+    }
+
+    /**
+     * 更新摄像机信息
+     *
+     * @param monitorInfo
+     * @return
+     */
+    @RequestMapping("/updateMonitorInfo")
+    Result updateMonitorInfo(@RequestBody MonitorInfo monitorInfo) {
+
+        long ret = monitorService.updateMonitorInfo(monitorInfo);
+        if (ret < 0) {
+            return Result.error("更新摄像机信息失败");
+        } else {
+            return Result.success("更新摄像机信息成功");
+        }
+    }
+
+    /**
+     * 根据站点编号，获取站点下全部摄像头信息
+     *
+     * @return
+     */
+    @RequestMapping("/getAllMonitorInfo")
+    Result getAllMonitorInfo(@RequestParam("stationNo") String stationNo) {
+        Object data;
+        try {
+            data = monitorService.getAllMonitorInfo(stationNo);
+        } catch (Exception e) {
+            return Result.error(e.getMessage());
+        }
+        return Result.success("请求成功", data);
+    }
+
+    /**
+     * 根据摄像机编号删除摄像机信息
+     *
+     * @param monitoringNo
+     * @return
+     */
+    @RequestMapping("/deleteMonitorInfo")
+    Result deleteMonitorInfo(@RequestParam("monitoringNo") String monitoringNo) {
+        long ret = monitorService.deleteMonitorInfo(monitoringNo);
+        if (ret < 0) {
+            return Result.error("删除失败，服务器异常");
+        }
+        return Result.success("请求成功");
+    }
+
+    /**
+     * 获取所有站点下摄像机信息
+     *
+     * @return
+     */
+    @RequestMapping("/monitoringViewTree")
+    Result monitoringViewTree() {
+        Object data;
+        try {
+            data = monitorService.monitoringViewTree();
+        } catch (Exception e) {
+            return Result.error("获取监控树信息失败，服务器异常");
+        }
+        return Result.success("请求成功", data);
     }
 }

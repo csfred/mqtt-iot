@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.iot.mapper.MonitorMapper">
+
+    <insert id="saveMonitorInfo" parameterType="com.iot.entity.MonitorInfo">
+        insert into t_monitor_info(f_station_no, f_monitoring_no, f_monitoring_name, f_device_Id, f_channel_Id,
+                                   f_url, f_remarks1, f_remarks2, f_remarks3)
+        values (#{stationNo}, #{monitoringNo}, #{monitoringName}, #{deviceId}, #{channelId}, #{url},
+                #{remarks1}, #{remarks2}, #{remarks3})
+    </insert>
+
+
+    <update id="updateMonitorInfo" parameterType="com.iot.entity.MonitorInfo">
+        update t_monitor_info
+        set f_station_no      = #{stationNo},
+            f_monitoring_name = #{monitoringName},
+            f_device_Id       = #{deviceId},
+            f_channel_Id      = #{channelId},
+            f_url             = #{url},
+            f_remarks1        = #{remarks1},
+            f_remarks2        = #{remarks2},
+            f_remarks3        = #{remarks3}
+        where f_monitoring_no = #{monitoringNo}
+    </update>
+
+    <select id="getAllMonitorInfo" resultType="com.iot.entity.MonitorInfo">
+        select f_station_no      as stationNo,
+               f_monitoring_no   as monitoringNo,
+               f_monitoring_name as monitoringName,
+               f_device_Id       as deviceId,
+               f_channel_Id      as channelId,
+               f_url             as url,
+               f_remarks1        as remarks1,
+               f_remarks2        as remarks2,
+               f_remarks3        as remarks3
+        from t_monitor_info
+        where f_station_no = #{stationNo}
+    </select>
+
+    <delete id="deleteMonitorInfo" parameterType="java.lang.String">
+        delete
+        from t_monitor_info
+        where f_monitoring_no = #{monitoringNo}
+    </delete>
+
+
+</mapper>
