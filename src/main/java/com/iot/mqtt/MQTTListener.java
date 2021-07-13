@@ -18,28 +18,36 @@ import org.springframework.stereotype.Component;
 @Component
 public class MQTTListener implements ApplicationListener<ContextRefreshedEvent> {
 
-  @Value("${mqtt.username}")
-  private String username;
-  @Value("${mqtt.password}")
-  private String password;
-  private final MQTTConnect server;
-  private final InitCallback initCallback;
+    @Value("${mqtt.username}")
+    private String username;
+    @Value("${mqtt.password}")
+    private String password;
+    private final MQTTConnect server;
+    private final InitCallback initCallback;
 
-  @Autowired
-  public MQTTListener(MQTTConnect server, InitCallback initCallback) {
-    this.server = server;
-    this.initCallback = initCallback;
-  }
-
-  @Override
-  public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
-    try {
-      server.setMqttClient(username, password, initCallback);
-      server.sub("/sys/OG581LL0720072800318/up");
-    } catch (MqttException e) {
-      log.error(e.getMessage(), e);
+    @Autowired
+    public MQTTListener(MQTTConnect server, InitCallback initCallback) {
+        this.server = server;
+        this.initCallback = initCallback;
     }
-  }
+
+    @Override
+    public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
+        try {
+            server.setMqttClient(username, password, initCallback);
+            //server.sub("/sys/OG581LL0720072800318/up")
+        } catch (MqttException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
+
+    public void pubTopic(String topic) {
+        try {
+            server.sub(topic);
+        } catch (MqttException e) {
+            log.error(e.getMessage(), e);
+        }
+    }
 }
 
 

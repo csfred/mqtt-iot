@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.iot.entity.*;
 import com.iot.mapper.DeviceMapper;
+import com.iot.mqtt.MQTTListener;
 import com.iot.service.DeviceService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.annotations.Param;
@@ -39,6 +40,9 @@ public class DeviceServiceImpl implements DeviceService {
     @Resource
     private DeviceMapper deviceMapper;
 
+    @Resource
+    private MQTTListener mqttListener;
+
     @Value("${upload.path}")
     private String uploadPath;
 
@@ -51,6 +55,10 @@ public class DeviceServiceImpl implements DeviceService {
         } catch (Exception e) {
             log.error("saveStationInfo stationInfo={}, errorMsg={}", JSON.toJSONString(stationInfo), e.getMessage());
         }
+        if (ret != -1) {
+            String topic = "/sys/" + stationInfo.getStationNo() + "/up";
+            mqttListener.pubTopic(topic);
+        }
         return ret;
     }
 
@@ -61,6 +69,10 @@ public class DeviceServiceImpl implements DeviceService {
             ret = deviceMapper.updateStationInfo(stationInfo);
         } catch (Exception e) {
             log.error("updateStationInfo stationInfo={}, errorMsg={}", JSON.toJSONString(stationInfo), e.getMessage());
+        }
+        if (ret != -1) {
+            String topic = "/sys/" + stationInfo.getStationNo() + "/up";
+            mqttListener.pubTopic(topic);
         }
         return ret;
     }

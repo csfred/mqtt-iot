@@ -102,7 +102,7 @@
         where f_dev_no = #{devNo}
           and f_station_no = #{stationNo}
           and f_end_receive_time &lt;= #{queryTime}
-          and f_is_show = 1;
+          and f_is_show = 1
         order by f_end_receive_time desc limit 0, 1
     </select>
 
