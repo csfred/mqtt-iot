@@ -57,6 +57,7 @@ public class DeviceServiceImpl implements DeviceService {
         }
         if (ret != -1) {
             String topic = "/sys/" + stationInfo.getStationNo() + "/up";
+            log.error("saveStationInfo topic={}", topic);
             mqttListener.pubTopic(topic);
         }
         return ret;
@@ -72,6 +73,7 @@ public class DeviceServiceImpl implements DeviceService {
         }
         if (ret != -1) {
             String topic = "/sys/" + stationInfo.getStationNo() + "/up";
+            log.error("saveStationInfo topic={}", topic);
             mqttListener.pubTopic(topic);
         }
         return ret;

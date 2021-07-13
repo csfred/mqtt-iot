@@ -54,7 +54,7 @@ public class InitCallback implements MqttCallback {
     public void messageArrived(String topic, MqttMessage message) {
         try {
             String msg = new String(message.getPayload());
-            log.error("test topic={},message={}", topic, msg);
+            log.error("test topic={}", topic);
             boolean isWrongTopic = !topic.startsWith(Constants.TOPIC_START_SYS_STR) ||
                     !topic.endsWith(Constants.TOPIC_END_UP_STR);
             if (isWrongTopic) {
