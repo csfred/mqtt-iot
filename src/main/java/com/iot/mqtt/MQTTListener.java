@@ -29,13 +29,14 @@ public class MQTTListener implements ApplicationListener<ContextRefreshedEvent> 
     public MQTTListener(MQTTConnect server, InitCallback initCallback) {
         this.server = server;
         this.initCallback = initCallback;
+        this.initCallback._setMqttLinsrener(this);
     }
 
     @Override
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         try {
             server.setMqttClient(username, password, initCallback);
-            //server.sub("/sys/OG581LL0720072800318/up")
+            server.sub("/sys/OG581LL0720072800318/up");
         } catch (MqttException e) {
             log.error(e.getMessage(), e);
         }

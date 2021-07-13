@@ -13,6 +13,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import java.sql.Timestamp;
 import java.util.*;
@@ -31,6 +32,11 @@ public class InitCallback implements MqttCallback {
     private DeviceService deviceService;
 
     private List<DeviceInfo> deviceInfoList = null;
+
+
+    public void _setMqttLinsrener(MQTTListener mqttListener) {
+        deviceService.setMqttListener(mqttListener);
+    }
 
     /**
      * MQTT 断开连接会执行此方法
@@ -54,7 +60,7 @@ public class InitCallback implements MqttCallback {
     public void messageArrived(String topic, MqttMessage message) {
         try {
             String msg = new String(message.getPayload());
-            log.error("test topic={}", topic);
+            //log.error("topic = {}, msg={}", topic, msg);
             boolean isWrongTopic = !topic.startsWith(Constants.TOPIC_START_SYS_STR) ||
                     !topic.endsWith(Constants.TOPIC_END_UP_STR);
             if (isWrongTopic) {

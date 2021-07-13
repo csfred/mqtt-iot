@@ -40,7 +40,17 @@ public interface MonitorMapper {
      * @param stationNo 站点编号
      * @return
      */
-    List<MonitorInfo> getAllMonitorInfo(@Param("stationNo") String stationNo);
+    List<MonitorInfo> getAllMonitorInfo(@Param("stationNo") String stationNo,
+                                        @Param("type") String type);
+
+    /**
+     * 检测是否存在摄像机
+     * @param stationNo
+     * @param monitoringNo
+     * @return
+     */
+    Integer checkExist(@Param("stationNo") String stationNo,
+                       @Param("monitoringNo") String monitoringNo);
 
     /**
      * 根据摄像机编号删除摄像机信息
@@ -51,8 +61,9 @@ public interface MonitorMapper {
 
     /**
      * 获取摄像机信息中所有的站点编号，不重复的
+     *
      * @return
      */
-    Set<String> getAllStationNoInMonitor();
+    List<String> getAllStationNoInMonitor();
 
 }

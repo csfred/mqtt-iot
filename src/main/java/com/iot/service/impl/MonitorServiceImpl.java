@@ -13,7 +13,6 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 /**
  * TODO
@@ -35,7 +34,12 @@ public class MonitorServiceImpl implements MonitorService {
     public long saveMonitorInfo(MonitorInfo monitorInfo) {
         long ret = -1;
         try {
-            ret = monitorMapper.saveMonitorInfo(monitorInfo);
+            Integer total = monitorMapper.checkExist(monitorInfo.getStationNo(), monitorInfo.getMonitoringNo());
+            if (total > 0) {
+                ret = -2;
+            } else {
+                ret = monitorMapper.saveMonitorInfo(monitorInfo);
+            }
         } catch (Exception e) {
             log.error("saveStationInfo stationInfo={}, errorMsg={}", JSON.toJSONString(monitorInfo), e.getMessage());
         }
@@ -54,9 +58,9 @@ public class MonitorServiceImpl implements MonitorService {
     }
 
     @Override
-    public List<MonitorInfo> getAllMonitorInfo(String stationNo) {
+    public List<MonitorInfo> getAllMonitorInfo(String stationNo, String type) {
         try {
-            return monitorMapper.getAllMonitorInfo(stationNo);
+            return monitorMapper.getAllMonitorInfo(stationNo, type);
         } catch (Exception e) {
             log.error("stationNo={}, errorMsg={}", stationNo, e.getMessage());
             return null;
@@ -76,7 +80,7 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Override
     public List<JSONObject> monitoringViewTree() {
-        Set<String> stationNoList = monitorMapper.getAllStationNoInMonitor();
+        List<String> stationNoList = monitorMapper.getAllStationNoInMonitor();
         if (CollectionUtils.isEmpty(stationNoList)) {
             return null;
         }
@@ -86,7 +90,7 @@ public class MonitorServiceImpl implements MonitorService {
             if (null == stationInfo) {
                 continue;
             }
-            List<MonitorInfo> monitorInfos = monitorMapper.getAllMonitorInfo(stationNo);
+            List<MonitorInfo> monitorInfos = monitorMapper.getAllMonitorInfo(stationNo, "");
             JSONObject jsonObject = new JSONObject(8);
             jsonObject.put("id", stationNo);
             jsonObject.put("label", stationInfo.getStationName());
@@ -104,7 +108,10 @@ public class MonitorServiceImpl implements MonitorService {
                 }
                 jsonObject.put("children", childrenList);
             }
+            retList.add(jsonObject);
         }
+        log.error("monitoringViewTree stationNoList={}, retList={}",
+                JSON.toJSONString(stationNoList), JSON.toJSONString(retList));
         return retList;
     }
 

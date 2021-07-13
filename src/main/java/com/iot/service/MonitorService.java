@@ -1,10 +1,7 @@
 package com.iot.service;
 
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.iot.entity.*;
-import org.apache.ibatis.annotations.Param;
-
 import java.util.List;
 
 /**
@@ -37,7 +34,7 @@ public interface MonitorService {
      * @param stationNo 站点编号
      * @return
      */
-    List<MonitorInfo> getAllMonitorInfo(@Param("stationNo") String stationNo);
+    List<MonitorInfo> getAllMonitorInfo(String stationNo, String type);
 
     /**
      * 根据摄像机编号删除摄像机信息
@@ -49,6 +46,7 @@ public interface MonitorService {
 
     /**
      * 获取所有站点下所有摄像头信息，组装拼接
+     *
      * @return
      */
     List<JSONObject> monitoringViewTree();

@@ -31,6 +31,11 @@ public class MonitorInfo implements Serializable {
     private String monitoringName;
 
     /**
+     * 类型
+     */
+    private String type;
+
+    /**
      * 设备序列号 摄像机专用
      */
     private String deviceId;

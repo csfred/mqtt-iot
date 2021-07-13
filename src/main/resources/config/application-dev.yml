@@ -1,5 +1,6 @@
-logging:
-  com.iot.mapper: debug
+#logging:
+#  level:
+#    com.iot.mapper: debug
 
 spring:
   resources:

@@ -90,7 +90,7 @@
                 #{endReceiveTime}, 1)
     </insert>
 
-    <select id="getDeviceLiveData" resultType="com.iot.entity.Device">
+    <select id="getDeviceLiveData" parameterType="com.iot.entity.DeviceLiveData" resultType="com.iot.entity.Device">
         select f_dev_no              as devNo,
                f_station_no          as stationNo,
                f_var_list_fields     as varListFields,

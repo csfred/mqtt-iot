@@ -40,12 +40,16 @@ public class DeviceServiceImpl implements DeviceService {
     @Resource
     private DeviceMapper deviceMapper;
 
-    @Resource
     private MQTTListener mqttListener;
 
     @Value("${upload.path}")
     private String uploadPath;
 
+
+    @Override
+    public void setMqttListener(MQTTListener mqttListener) {
+        this.mqttListener = mqttListener;
+    }
 
     @Override
     public long saveStationInfo(StationInfo stationInfo) {
@@ -70,11 +74,6 @@ public class DeviceServiceImpl implements DeviceService {
             ret = deviceMapper.updateStationInfo(stationInfo);
         } catch (Exception e) {
             log.error("updateStationInfo stationInfo={}, errorMsg={}", JSON.toJSONString(stationInfo), e.getMessage());
-        }
-        if (ret != -1) {
-            String topic = "/sys/" + stationInfo.getStationNo() + "/up";
-            log.error("saveStationInfo topic={}", topic);
-            mqttListener.pubTopic(topic);
         }
         return ret;
     }
@@ -256,9 +255,9 @@ public class DeviceServiceImpl implements DeviceService {
         deviceLiveData.setDevNo(devNo);
         deviceLiveData.setStationNo(stationNo);
         LocalDateTime queryTime = LocalDateTime.now().minusSeconds(20);
-        deviceLiveData.setQueryTime(Timestamp.valueOf(queryTime));
-
-        return deviceMapper.getDeviceLiveData(deviceLiveData);
+        deviceLiveData.setQueryTime(Timestamp.valueOf(queryTime).toString());
+        Device device = deviceMapper.getDeviceLiveData(deviceLiveData);
+        return device;
     }
 
     @Override

@@ -5,6 +5,7 @@ import com.iot.entity.Device;
 import com.iot.entity.DeviceInfo;
 import com.iot.entity.DeviceType;
 import com.iot.entity.StationInfo;
+import com.iot.mqtt.MQTTListener;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,6 +20,12 @@ import java.util.List;
  */
 public interface DeviceService {
 
+
+    /**
+     * 设置mqttListener
+     * @param mqttListener
+     */
+    void setMqttListener(MQTTListener mqttListener);
 
     /**
      * 存储站点信息

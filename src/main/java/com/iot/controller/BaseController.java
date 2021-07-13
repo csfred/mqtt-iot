@@ -236,7 +236,7 @@ public class BaseController {
 
         long ret = monitorService.saveMonitorInfo(monitorInfo);
         if (ret < 0) {
-            return Result.error("保存摄像机信息失败");
+            return Result.error("保存摄像机信息失败", ret);
         } else {
             return Result.success("保存摄像机信息成功");
         }
@@ -265,10 +265,11 @@ public class BaseController {
      * @return
      */
     @RequestMapping("/getAllMonitorInfo")
-    Result getAllMonitorInfo(@RequestParam("stationNo") String stationNo) {
+    Result getAllMonitorInfo(@RequestParam("stationNo") String stationNo,
+                             @RequestParam("type") String type) {
         Object data;
         try {
-            data = monitorService.getAllMonitorInfo(stationNo);
+            data = monitorService.getAllMonitorInfo(stationNo, type);
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }

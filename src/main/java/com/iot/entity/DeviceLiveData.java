@@ -19,7 +19,7 @@ public class DeviceLiveData implements Serializable {
     /**
      * 设备编号
      */
-    private long devNo;
+    private Long devNo;
 
     /**
      * 站点编号
@@ -29,6 +29,6 @@ public class DeviceLiveData implements Serializable {
     /**
      * 轮询查询时间，目前当前时间-20s
      */
-    private Timestamp queryTime;
+    private String queryTime;
 
 }
