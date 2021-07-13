@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -47,5 +48,11 @@ public interface MonitorMapper {
      * @param monitoringNo
      */
     long deleteMonitorInfo(@Param("monitoringNo") String monitoringNo);
+
+    /**
+     * 获取摄像机信息中所有的站点编号，不重复的
+     * @return
+     */
+    Set<String> getAllStationNoInMonitor();
 
 }

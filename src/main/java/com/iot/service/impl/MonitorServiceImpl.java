@@ -3,13 +3,17 @@ package com.iot.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.iot.entity.*;
+import com.iot.mapper.DeviceMapper;
 import com.iot.mapper.MonitorMapper;
 import com.iot.service.MonitorService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 /**
  * TODO
@@ -23,6 +27,9 @@ public class MonitorServiceImpl implements MonitorService {
 
     @Resource
     private MonitorMapper monitorMapper;
+
+    @Resource
+    private DeviceMapper deviceMapper;
 
     @Override
     public long saveMonitorInfo(MonitorInfo monitorInfo) {
@@ -68,8 +75,37 @@ public class MonitorServiceImpl implements MonitorService {
     }
 
     @Override
-    public List<JSONObject> monitoringViewTree(){
-        return null;
+    public List<JSONObject> monitoringViewTree() {
+        Set<String> stationNoList = monitorMapper.getAllStationNoInMonitor();
+        if (CollectionUtils.isEmpty(stationNoList)) {
+            return null;
+        }
+        List<JSONObject> retList = new ArrayList<>(8);
+        for (String stationNo : stationNoList) {
+            StationInfo stationInfo = deviceMapper.getStationInfoByNo(stationNo);
+            if (null == stationInfo) {
+                continue;
+            }
+            List<MonitorInfo> monitorInfos = monitorMapper.getAllMonitorInfo(stationNo);
+            JSONObject jsonObject = new JSONObject(8);
+            jsonObject.put("id", stationNo);
+            jsonObject.put("label", stationInfo.getStationName());
+            if (CollectionUtils.isEmpty(monitorInfos)) {
+                jsonObject.put("children", new ArrayList<>(4));
+            } else {
+                List<JSONObject> childrenList = new ArrayList<>(8);
+                for (MonitorInfo monitorInfo : monitorInfos) {
+                    JSONObject childrenObject = new JSONObject(8);
+                    childrenObject.put("id", monitorInfo.getMonitoringNo());
+                    childrenObject.put("label", monitorInfo.getMonitoringName());
+                    String monitorVal = monitorInfo.getDeviceId() + "," + monitorInfo.getChannelId() + "," + monitorInfo.getUrl();
+                    childrenObject.put("value", monitorVal);
+                    childrenList.add(childrenObject);
+                }
+                jsonObject.put("children", childrenList);
+            }
+        }
+        return retList;
     }
 
 }

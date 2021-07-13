@@ -44,5 +44,10 @@
         where f_monitoring_no = #{monitoringNo}
     </delete>
 
+    <select id="getAllStationNoInMonitor" resultType="java.lang.String">
+        select distinct f_station_no as stationNo
+        from t_monitor_info;
+    </select>
+
 
 </mapper>
