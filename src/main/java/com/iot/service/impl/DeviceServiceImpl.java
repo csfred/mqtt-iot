@@ -8,6 +8,7 @@ import com.iot.mapper.DeviceMapper;
 import com.iot.mqtt.MQTTListener;
 import com.iot.service.DeviceService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.FileUtils;
 import org.apache.ibatis.annotations.Param;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -45,6 +47,9 @@ public class DeviceServiceImpl implements DeviceService {
     @Value("${upload.path}")
     private String uploadPath;
 
+    @Value("${mqtt.resource.topic}")
+    private String mqttTopicIni;
+
 
     @Override
     public void setMqttListener(MQTTListener mqttListener) {
@@ -61,7 +66,11 @@ public class DeviceServiceImpl implements DeviceService {
         }
         if (ret != -1) {
             String topic = "/sys/" + stationInfo.getStationNo() + "/up";
-            log.error("saveStationInfo topic={}", topic);
+            try {
+                FileUtils.write(new File(mqttTopicIni), topic, StandardCharsets.UTF_8, true);
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
             mqttListener.pubTopic(topic);
         }
         return ret;

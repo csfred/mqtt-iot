@@ -102,16 +102,16 @@ public class MonitorServiceImpl implements MonitorService {
                     JSONObject childrenObject = new JSONObject(8);
                     childrenObject.put("id", monitorInfo.getMonitoringNo());
                     childrenObject.put("label", monitorInfo.getMonitoringName());
-                    String monitorVal = monitorInfo.getDeviceId() + "," + monitorInfo.getChannelId() + "," + monitorInfo.getUrl();
-                    childrenObject.put("value", monitorVal);
+                    childrenObject.put("deviceId", monitorInfo.getDeviceId());
+                    childrenObject.put("channelId", monitorInfo.getChannelId());
+                    childrenObject.put("url", monitorInfo.getUrl());
+                    childrenObject.put("type", monitorInfo.getType());
                     childrenList.add(childrenObject);
                 }
                 jsonObject.put("children", childrenList);
             }
             retList.add(jsonObject);
         }
-        log.error("monitoringViewTree stationNoList={}, retList={}",
-                JSON.toJSONString(stationNoList), JSON.toJSONString(retList));
         return retList;
     }
 

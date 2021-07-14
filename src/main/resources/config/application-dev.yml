@@ -18,6 +18,8 @@ mqtt:
   host: tcp://9.140.106.126:1883
   username: root
   password: Aa-654321
+  resource:
+    topic: D:/data/mqtt/topic.ini
 
 upload:
   path: D:/data/backgroundImage/

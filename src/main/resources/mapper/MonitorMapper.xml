@@ -22,7 +22,7 @@
             f_remarks2        = #{remarks2},
             f_remarks3        = #{remarks3}
         where f_monitoring_no = #{monitoringNo}
-          and f_station_no = = #{stationNo}
+          and f_station_no = #{stationNo}
     </update>
 
     <select id="getAllMonitorInfo" resultType="com.iot.entity.MonitorInfo">

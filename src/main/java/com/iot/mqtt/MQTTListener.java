@@ -7,6 +7,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.apache.commons.io.FileUtils;
+import org.springframework.util.CollectionUtils;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 /**
  * 项目启动 监听主题
@@ -22,6 +28,9 @@ public class MQTTListener implements ApplicationListener<ContextRefreshedEvent> 
     private String username;
     @Value("${mqtt.password}")
     private String password;
+    @Value("${mqtt.resource.topic}")
+    private String mqttTopicIni;
+
     private final MQTTConnect server;
     private final InitCallback initCallback;
 
@@ -36,8 +45,15 @@ public class MQTTListener implements ApplicationListener<ContextRefreshedEvent> 
     public void onApplicationEvent(ContextRefreshedEvent contextRefreshedEvent) {
         try {
             server.setMqttClient(username, password, initCallback);
-            server.sub("/sys/OG581LL0720072800318/up");
+            List<String> topicLines = FileUtils.readLines(new File(mqttTopicIni));
+            if (!CollectionUtils.isEmpty(topicLines)) {
+                for (String topic : topicLines) {
+                    server.sub(topic);
+                }
+            }
         } catch (MqttException e) {
+            log.error(e.getMessage(), e);
+        } catch (IOException e) {
             log.error(e.getMessage(), e);
         }
     }
