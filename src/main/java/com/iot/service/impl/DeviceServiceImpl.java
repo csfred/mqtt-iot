@@ -24,10 +24,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * TODO
@@ -115,6 +112,19 @@ public class DeviceServiceImpl implements DeviceService {
             ret = deviceMapper.deleteStationInfo(stationNo);
         } catch (Exception e) {
             log.error("deleteStationInfo stationNo={}, errorMsg={}", stationNo, e.getMessage());
+        }
+        if (-1 != ret) {
+            String topic = "/sys/" + stationNo + "/up";
+            try {
+                File topicFile = new File(mqttTopicIni);
+                List<String> resultLines = FileUtils.readLines(topicFile);
+                if (!CollectionUtils.isEmpty(resultLines)) {
+                    resultLines.remove(topic);
+                }
+                FileUtils.writeLines(topicFile, StandardCharsets.UTF_8.toString(), resultLines, "\n");
+            } catch (IOException e) {
+                log.error(e.getMessage());
+            }
         }
         return ret;
     }
