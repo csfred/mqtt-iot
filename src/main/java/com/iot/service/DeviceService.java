@@ -118,10 +118,11 @@ public interface DeviceService {
      * 检查varListMd5是否存在
      *
      * @param stationNo
+     * @param devNo
      * @param varListFieldsMd5
      * @return total
      */
-    Long checkDeviceExist(String stationNo, String varListFieldsMd5);
+    Long checkDeviceExist(String stationNo, Long devNo, String varListFieldsMd5);
 
 
     /**

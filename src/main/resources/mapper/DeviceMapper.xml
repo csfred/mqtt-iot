@@ -153,11 +153,12 @@
           and f_is_show = 1;
     </update>
 
-    <select id="checkDeviceExist" parameterType="java.lang.String" resultType="java.lang.Long">
+    <select id="checkDeviceExist" parameterType="java.lang.Object" resultType="java.lang.Long">
         select count(1) as total
         from t_device
         where MD5(f_var_list_fields) = #{varList4FieldsMd5}
           and f_station_no = #{stationNo}
+          and f_dev_no = #{devNo}
           and f_is_show = 1;
     </select>
 

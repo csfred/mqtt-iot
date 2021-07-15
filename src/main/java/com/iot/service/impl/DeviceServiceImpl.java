@@ -253,8 +253,8 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public Long checkDeviceExist(String stationNo, String varListFieldsMd5) {
-        return deviceMapper.checkDeviceExist(stationNo, varListFieldsMd5);
+    public Long checkDeviceExist(String stationNo, Long devNo, String varListFieldsMd5) {
+        return deviceMapper.checkDeviceExist(stationNo, devNo, varListFieldsMd5);
     }
 
 
@@ -273,8 +273,9 @@ public class DeviceServiceImpl implements DeviceService {
         DeviceLiveData deviceLiveData = new DeviceLiveData();
         deviceLiveData.setDevNo(devNo);
         deviceLiveData.setStationNo(stationNo);
-        LocalDateTime queryTime = LocalDateTime.now().minusSeconds(20);
-        deviceLiveData.setQueryTime(Timestamp.valueOf(queryTime).toString());
+        LocalDateTime queryTime = LocalDateTime.now();
+        String queryTimeStr = Timestamp.valueOf(queryTime).toString();
+        deviceLiveData.setQueryTime(queryTimeStr);
         Device device = deviceMapper.getDeviceLiveData(deviceLiveData);
         return device;
     }

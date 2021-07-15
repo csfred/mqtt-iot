@@ -119,9 +119,11 @@ public interface DeviceMapper {
      *
      * @param varList4FieldsMd5 参数，值 MD5
      * @param stationNo         站点编号
+     * @param devNo         设备编号
      * @return
      */
     Long checkDeviceExist(@Param("stationNo") String stationNo,
+                          @Param("devNo") Long devNo,
                           @Param("varList4FieldsMd5") String varList4FieldsMd5);
 
     /**

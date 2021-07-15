@@ -38,7 +38,7 @@ public class MQTTListener implements ApplicationListener<ContextRefreshedEvent> 
     public MQTTListener(MQTTConnect server, InitCallback initCallback) {
         this.server = server;
         this.initCallback = initCallback;
-        this.initCallback._setMqttLinsrener(this);
+        this.initCallback._setMqttListener(this);
     }
 
     @Override
