@@ -132,13 +132,17 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public Boolean checkStationIsOnline(String stationNo) {
+    public Map<String, Object> checkStationIsOnline(String stationNo) {
         try {
-            return !deviceMapper.checkStationOffOnline(stationNo);
+            Map<String, Object> retMap = deviceMapper.checkStationOffOnline(stationNo);
+            if (null == retMap || retMap.isEmpty()) {
+                retMap = deviceMapper.checkStationOnline(stationNo);
+            }
+            return retMap;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
-        return false;
+        return null;
     }
 
     @Override

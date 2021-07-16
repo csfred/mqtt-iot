@@ -65,15 +65,26 @@
         where f_station_no = #{stationNo}
     </update>
 
-    <select id="checkStationOffOnline" parameterType="java.lang.String" resultType="java.lang.Boolean">
-        select exists
-                   (select 1
-                    from t_station_info
-                    where f_station_no = #{stationNo}
-                      and (f_isOnline = 0
-                        or abs(timestampdiff(MINUTE
+    <select id="checkStationOffOnline" parameterType="java.lang.String" resultType="java.util.Map">
+        select t.isOnLine, t.lastReceiveTime
+        from (select f_isOnline as isOnLine, f_onlineModifyTime as lastReceiveTime
+              from t_station_info
+              where f_station_no = #{stationNo}
+                and (f_isOnline = 0
+                  or abs(timestampdiff(MINUTE
             , CURRENT_TIMESTAMP()
-                            , f_onlineModifyTime)) > 1))
+                      , f_onlineModifyTime)) > 1)) as t
+    </select>
+
+    <select id="checkStationOnline" parameterType="java.lang.String" resultType="java.util.Map">
+        select t.isOnLine, t.lastReceiveTime
+        from (select f_isOnline as isOnLine, f_onlineModifyTime as lastReceiveTime
+              from t_station_info
+              where f_station_no = #{stationNo}
+                and (f_isOnline = 1
+                  and abs(timestampdiff(MINUTE
+            , CURRENT_TIMESTAMP()
+                      , f_onlineModifyTime)) &lt;= 1)) as t
     </select>
 
     <select id="getStationOffOnlineByTime" resultType="java.lang.Boolean">

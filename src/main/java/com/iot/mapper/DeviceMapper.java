@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * TODO
@@ -34,33 +35,35 @@ public interface DeviceMapper {
 
     /**
      * 更新站点在线状态
+     *
      * @param stationNo
      * @param isOnline
      * @return
      */
     long updateStationOnline(@Param("stationNo") String stationNo, @Param("isOnline") boolean isOnline);
 
-    /**
-     * 将状态是在线，且在线修改时间和当前时间超过1分钟的站点的状态修改为下线
-     * @param stationNo
-     * @return
-     */
-    Boolean checkStationOffOnline(@Param("stationNo") String stationNo);
+
+    Map<String, Object> checkStationOffOnline(@Param("stationNo") String stationNo);
+
+    Map<String, Object> checkStationOnline(@Param("stationNo") String stationNo);
 
     /**
      * 获取有状态是在线，但时间超过1分钟没更新的站点编号
+     *
      * @return
      */
     List<String> getStationOffOnlineByTime();
 
     /**
      * 获取所有站点编号，不重复
+     *
      * @return
      */
     List<String> getAllStationNo();
 
     /**
      * 检测站点是否在线
+     *
      * @param stationNo
      * @return
      */
@@ -122,6 +125,7 @@ public interface DeviceMapper {
 
     /**
      * 根据站点编号查询站点信息
+     *
      * @param stationNo
      * @return
      */
@@ -153,7 +157,7 @@ public interface DeviceMapper {
      *
      * @param varList4FieldsMd5 参数，值 MD5
      * @param stationNo         站点编号
-     * @param devNo         设备编号
+     * @param devNo             设备编号
      * @return
      */
     Long checkDeviceExist(@Param("stationNo") String stationNo,

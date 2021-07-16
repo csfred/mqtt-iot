@@ -309,12 +309,12 @@ public class BaseController {
 
     @RequestMapping("/checkStationIsOnline")
     Result checkStationIsOnline(@RequestParam("stationNo") String stationNo) {
-        Boolean isOnline;
+        Object result;
         try {
-            isOnline = deviceService.checkStationIsOnline(stationNo);
+            result = deviceService.checkStationIsOnline(stationNo);
         } catch (Exception e) {
             return Result.error("获取站点在线状态失败，服务器异常");
         }
-        return Result.success("请求成功", isOnline);
+        return Result.success("请求成功", result);
     }
 }

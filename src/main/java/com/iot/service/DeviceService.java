@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
+import java.util.Map;
 
 /**
  * TODO
@@ -57,7 +58,7 @@ public interface DeviceService {
      * @param stationNo
      * @return
      */
-    Boolean checkStationIsOnline(String stationNo);
+    Map<String, Object> checkStationIsOnline(String stationNo);
 
 
     /**
