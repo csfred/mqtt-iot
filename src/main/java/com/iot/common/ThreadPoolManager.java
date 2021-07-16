@@ -73,21 +73,34 @@ public class ThreadPoolManager implements BeanFactoryAware {
 
 
     /**
-     * 将任务加入订单线程池
+     * 将任务1加入线程池
      */
     public void addSaveDbTask(String stationNo, String msg) {
-        System.out.println("此任务准备添加到线程池");
+        //System.out.println("此任务准备添加到线程池")
         BusinessThread businessThread = new BusinessThread();
         businessThread.setDeviceService(deviceService);
         businessThread.setMsg(msg);
         businessThread.setStationNo(stationNo);
+        businessThread.setIsDisconnected(false);
+        threadPool.execute(businessThread);
+    }
+
+    /**
+     * 将任务1加入线程池
+     */
+    public void addDisConnectTask(String stationNo) {
+        //System.out.println("此任务准备添加到线程池")
+        BusinessThread businessThread = new BusinessThread();
+        businessThread.setDeviceService(deviceService);
+        businessThread.setStationNo(stationNo);
+        businessThread.setIsDisconnected(true);
         threadPool.execute(businessThread);
     }
 
     /**
      * 线程池的定时任务----> 称为(调度线程池)。此线程池支持 定时以及周期性执行任务的需求。
      */
-    final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(5);
+    final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(20);
 
 
     /**
@@ -121,7 +134,7 @@ public class ThreadPoolManager implements BeanFactoryAware {
      */
     public void shutdown() {
         //true表示如果定时任务在执行，立即中止，false则等待任务结束后再停止
-        System.out.println("终止订单线程池+调度线程池：" + scheduledFuture.cancel(false));
+        System.out.println("终止线程池+调度线程池：" + scheduledFuture.cancel(false));
         scheduler.shutdown();
         threadPool.shutdown();
     }

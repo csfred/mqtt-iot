@@ -29,7 +29,10 @@ public class BusinessThread implements Runnable {
     private List<DeviceInfo> deviceInfoList = null;
 
     private String stationNo;
+
     private String msg;
+
+    private Boolean isDisconnected;
 
     @Override
     public void run() {
@@ -38,7 +41,14 @@ public class BusinessThread implements Runnable {
         if (null == jsonObject || jsonObject.isEmpty()) {
             return;
         }
-        deviceInfoList = deviceService.getDeviceInfoAll(stationNo);
+        //这里只检测下线，还有一种情况是没数据
+        if (!isDisconnected) {
+            long ret = deviceService.updateStationOnline(stationNo, false);
+            //站点不存在或者修改失败
+            if (ret <= 0) {
+                return;
+            }
+        }
         jsonObject.put(Constants.STATION_NO_KEY, stationNo);
         if (jsonObject.containsKey(Constants.MSG_GATEWAY_SN_KEY)) {
             //站点信息
@@ -47,6 +57,17 @@ public class BusinessThread implements Runnable {
             //站点设备列表
         }
         if (jsonObject.containsKey(Constants.MSG_VAR_LIST)) {
+            try {
+                long ret = deviceService.updateStationOnline(stationNo, true);
+                if (ret <= 0) {
+                    return;
+                }
+            } catch (Exception e) {
+                log.error(e.getMessage(), e);
+                return;
+            }
+
+            deviceInfoList = deviceService.getDeviceInfoAll(stationNo);
             //设备信息
             saveDevice(jsonObject);
         }

@@ -23,6 +23,7 @@ public interface DeviceService {
 
     /**
      * 设置mqttListener
+     *
      * @param mqttListener
      */
     void setMqttListener(MQTTListener mqttListener);
@@ -40,6 +41,23 @@ public interface DeviceService {
      * @param stationInfo
      */
     long updateStationInfo(StationInfo stationInfo);
+
+    /**
+     * 修改站点是否正常连接
+     *
+     * @param stationNo
+     * @param isOnline
+     * @return
+     */
+    long updateStationOnline(String stationNo, boolean isOnline);
+
+    /**
+     * 判断站点是否在线
+     *
+     * @param stationNo
+     * @return
+     */
+    Boolean checkStationIsOnline(String stationNo);
 
 
     /**

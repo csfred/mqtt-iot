@@ -7,8 +7,10 @@ import com.iot.entity.*;
 import com.iot.mapper.DeviceMapper;
 import com.iot.mqtt.MQTTListener;
 import com.iot.service.DeviceService;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import org.apache.ibatis.annotations.Param;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +20,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
@@ -25,6 +28,9 @@ import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * TODO
@@ -47,6 +53,36 @@ public class DeviceServiceImpl implements DeviceService {
     @Value("${mqtt.resource.topic}")
     private String mqttTopicIni;
 
+    @Data
+    private static class ScanOnlineTask implements Runnable {
+
+        private DeviceMapper deviceMapper = null;
+
+        @Override
+        public void run() {
+            if (null == deviceMapper) {
+                return;
+            }
+            List<String> allStationNoList = deviceMapper.getStationOffOnlineByTime();
+            if (CollectionUtils.isEmpty(allStationNoList)) {
+                return;
+            }
+            System.out.println("更新站点为下线");
+            for (String stationNo : allStationNoList) {
+                deviceMapper.updateStationOnline(stationNo, false);
+            }
+        }
+    }
+
+    ScheduledExecutorService service = new ScheduledThreadPoolExecutor(5,
+            new BasicThreadFactory.Builder().namingPattern("deviceServiceImpl-schedule-pool-%d").daemon(true).build());
+
+    @PostConstruct
+    void _init() {
+        ScanOnlineTask scanOnlineTask = new ScanOnlineTask();
+        scanOnlineTask.setDeviceMapper(deviceMapper);
+        service.scheduleAtFixedRate(scanOnlineTask, 10, 5, TimeUnit.SECONDS);
+    }
 
     @Override
     public void setMqttListener(MQTTListener mqttListener) {
@@ -82,6 +118,27 @@ public class DeviceServiceImpl implements DeviceService {
             log.error("updateStationInfo stationInfo={}, errorMsg={}", JSON.toJSONString(stationInfo), e.getMessage());
         }
         return ret;
+    }
+
+    @Override
+    public long updateStationOnline(String stationNo, boolean isOnline) {
+        long ret = -1;
+        try {
+            ret = deviceMapper.updateStationOnline(stationNo, isOnline);
+        } catch (Exception e) {
+            log.error("updateStationOnline stationNo={}, isOnline={}, errorMsg={}", stationNo, isOnline, e.getMessage());
+        }
+        return ret;
+    }
+
+    @Override
+    public Boolean checkStationIsOnline(String stationNo) {
+        try {
+            return !deviceMapper.checkStationOffOnline(stationNo);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+        }
+        return false;
     }
 
     @Override

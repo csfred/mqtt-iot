@@ -1,7 +1,5 @@
 package com.iot.mqtt;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.iot.common.ThreadPoolManager;
 import com.iot.entity.*;
@@ -12,7 +10,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;;
+import javax.annotation.Resource;
 
 /**
  * MQTT回调函数
@@ -52,29 +50,32 @@ public class InitCallback implements MqttCallback {
      */
     @Override
     public void messageArrived(String topic, MqttMessage message) {
-        try {
-            String msg = new String(message.getPayload());
-            //log.error("topic = {}, msg={}", topic, msg);
-            boolean isWrongTopic = !topic.startsWith(Constants.TOPIC_START_SYS_STR) ||
-                    !topic.endsWith(Constants.TOPIC_END_UP_STR);
-            if (isWrongTopic) {
-                return;
-            }
-            String stationNo = topic.substring(Constants.TOPIC_START_SYS_STR.length(),
-                    topic.indexOf(Constants.TOPIC_END_UP_STR));
-            threadPoolManager.addSaveDbTask(stationNo, msg);
-            JSONObject jsonObject = JSON.parseObject(msg);
-            String clientId = String.valueOf(jsonObject.get(Constants.MSG_CLIENT_ID));
-            if (!StringUtils.isEmpty(clientId) && !Constants.NULL_STR.equals(clientId)) {
-                if (topic.endsWith(Constants.TOPIC_END_DISCONNECT_STR)) {
-                    log.info("客户端已掉线：{}", clientId);
-                } else {
-                    log.info("客户端已上线：{}", clientId);
-                }
-            }
-
-        } catch (JSONException e) {
-            log.error("JSON Format Parsing Exception : {}", e.getMessage());
+        String msg = new String(message.getPayload());
+        //log.error("topic = {}, msg={}", topic, msg)
+        boolean isWrongTopic = !topic.startsWith(Constants.TOPIC_START_SYS_STR) ||
+                !topic.endsWith(Constants.TOPIC_END_UP_STR);
+        if (isWrongTopic) {
+            return;
         }
+        String stationNo = topic.substring(Constants.TOPIC_START_SYS_STR.length(),
+                topic.indexOf(Constants.TOPIC_END_UP_STR));
+        JSONObject jsonObject = JSONObject.parseObject(msg);
+        if (null == jsonObject || jsonObject.isEmpty()) {
+            return;
+        }
+        boolean isDisConnected = 2 == jsonObject.getInteger(Constants.MSG_CMD_ID);
+        boolean isConnected = 1 == jsonObject.getInteger(Constants.MSG_CMD_ID);
+        if (isDisConnected) {
+            log.info("客户端已掉线：{}", stationNo);
+            threadPoolManager.addDisConnectTask(stationNo);
+        }
+        if (isConnected) {
+            log.info("客户端已上线：{}", stationNo);
+        }
+        //发送了真正的数据包，包含VARLIST
+        if (!StringUtils.isEmpty(msg) && msg.contains(Constants.MSG_VAR_LIST)) {
+            threadPoolManager.addSaveDbTask(stationNo, msg);
+        }
+
     }
 }

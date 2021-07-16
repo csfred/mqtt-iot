@@ -8,10 +8,11 @@
                                    f_process_tech,
                                    f_process_scale, f_dev_ops_num, f_contact_tel, f_bg_dev_img_path,
                                    f_bg_water_img_path,
-                                   f_remarks1, f_remarks2, f_remarks3)
+                                   f_remarks1, f_remarks2, f_remarks3, f_isOnline, f_onlineModifyTime)
         values (#{stationNo}, #{stationName}, #{stationLon}, #{stationLat}, #{stationAddress}, #{processTech},
                 #{processScale}, #{devOpsNum},
-                #{connectTel}, #{bgDevImgPath}, #{bgWaterImgPath}, #{remarks1}, #{remarks2}, #{remarks3})
+                #{connectTel}, #{bgDevImgPath}, #{bgWaterImgPath}, #{remarks1}, #{remarks2},
+                #{remarks3}, 0, CURRENT_TIMESTAMP)
     </insert>
 
     <select id="getStationInfoByNo" parameterType="java.lang.String" resultType="com.iot.entity.StationInfo">
@@ -50,6 +51,44 @@
             f_remarks3          = #{remarks3}
         where f_station_no = #{stationNo}
     </update>
+
+    <update id="updateStationOnline" parameterType="java.lang.Object">
+        update t_station_info
+        set
+        <if test="isOnline == true">
+            f_isOnline = 1,
+        </if>
+        <if test="isOnline == false">
+            f_isOnline = 0,
+        </if>
+        f_onlineModifyTime = CURRENT_TIMESTAMP
+        where f_station_no = #{stationNo}
+    </update>
+
+    <select id="checkStationOffOnline" parameterType="java.lang.String" resultType="java.lang.Boolean">
+        select exists
+                   (select 1
+                    from t_station_info
+                    where f_station_no = #{stationNo}
+                      and (f_isOnline = 0
+                        or abs(timestampdiff(MINUTE
+            , CURRENT_TIMESTAMP()
+                            , f_onlineModifyTime)) > 1))
+    </select>
+
+    <select id="getStationOffOnlineByTime" resultType="java.lang.Boolean">
+        select distinct f_station_no as stationNo
+        from t_station_info
+        where f_isOnline = 1
+          and abs(timestampdiff(MINUTE
+            , CURRENT_TIMESTAMP()
+            , f_onlineModifyTime)) > 1
+    </select>
+
+    <select id="getAllStationNo" resultType="java.lang.String">
+        select distinct f_station_no as stationNo
+        from t_station_info
+    </select>
 
     <select id="getPageAllStationInfo" resultType="com.iot.entity.StationInfo">
         select f_station_no        as stationNo,

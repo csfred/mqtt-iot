@@ -50,10 +50,14 @@ public class MQTTConnect {
         MqttConnectOptions options = new MqttConnectOptions();
         options.setUserName(userName);
         options.setPassword(passWord.toCharArray());
-        options.setConnectionTimeout(10);///默认：30
-        options.setAutomaticReconnect(true);//默认：false
-        options.setCleanSession(false);//默认：true
-        //options.setKeepAliveInterval(20);//默认：60
+        ///默认：30
+        options.setConnectionTimeout(10);
+        //默认：false
+        options.setAutomaticReconnect(true);
+        //默认：true
+        options.setCleanSession(false);
+        //默认：60
+        //options.setKeepAliveInterval(20);
         return options;
     }
 
