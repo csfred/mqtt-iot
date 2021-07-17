@@ -11,9 +11,10 @@ import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -66,16 +67,29 @@ public class BusinessThread implements Runnable {
                 log.error(e.getMessage(), e);
                 return;
             }
-
-            deviceInfoList = deviceService.getDeviceInfoAll(stationNo);
-            //设备信息
-            saveDevice(jsonObject);
+            String varListJson = jsonObject.getString(Constants.MSG_VAR_LIST);
+            Map<String, Boolean> paraMap = new HashMap<>(4);
+            List<String> allFieldList = getAllVarFieldList(varListJson, paraMap);
+            boolean isAllNullVarList;
+            if (CollectionUtils.isEmpty(allFieldList)) {
+                isAllNullVarList = true;
+            } else {
+                isAllNullVarList = paraMap.get("IS_ALL_NULL_VALUE");
+            }
+            if (isAllNullVarList) {
+                deviceService.updateStationOnline(stationNo, false);
+            } else {
+                deviceInfoList = deviceService.getDeviceInfoAll(stationNo);
+                //设备信息
+                saveDevice(jsonObject);
+            }
         }
     }
 
-    private List<String> getAllVarFieldList(String varListJson) {
+    private List<String> getAllVarFieldList(String varListJson, Map<String, Boolean> retPramMap) {
         List<String> allFieldList = new ArrayList<>(8);
         JSONObject varListObject = JSON.parseObject(varListJson);
+        boolean isAllValueIsNull = true;
         if (null != varListObject && !varListObject.isEmpty()) {
             for (Map.Entry entry : varListObject.entrySet()) {
                 if (null != entry.getKey()) {
@@ -84,7 +98,13 @@ public class BusinessThread implements Runnable {
                         allFieldList.add(field);
                     }
                 }
+                if (isAllValueIsNull) {
+                    isAllValueIsNull = null == entry.getValue() || Constants.NULL_STR.equalsIgnoreCase(entry.getValue().toString());
+                }
             }
+        }
+        if (null != retPramMap) {
+            retPramMap.put("IS_ALL_NULL_VALUE", isAllValueIsNull);
         }
         return allFieldList;
     }
@@ -99,24 +119,36 @@ public class BusinessThread implements Runnable {
         if (null == varListObject || varListObject.isEmpty()) {
             return;
         }
-        List<String> allFieldList = getAllVarFieldList(varListJson);
-
+        List<String> allFieldList = getAllVarFieldList(varListJson, null);
+        if (!allFieldList.contains(Constants.EMPTY_STR)) {
+            allFieldList.add(Constants.EMPTY_STR);
+        }
         for (DeviceInfo deviceInfo : deviceInfoList) {
             List<String> deviceInfoFieldList = JSON.parseArray(deviceInfo.getDevVarFields(), String.class);
             if (allFieldList.containsAll(deviceInfoFieldList)) {
                 JSONObject varList4FieldObject = new JSONObject(8);
+                boolean isNullData = false;
                 for (String key : deviceInfoFieldList) {
-                    if (null != varListObject.get(key)) {
-                        varList4FieldObject.put(key, varListObject.get(key));
+                    Object filedVal = varListObject.get(key);
+                    isNullData = (null != filedVal && Constants.NULL_STR.equalsIgnoreCase(filedVal.toString()));
+                    if (isNullData) {
+                        break;
                     }
+                    if (null != filedVal) {
+                        varList4FieldObject.put(key, filedVal);
+                    }
+                }
+                if (isNullData) {
+                    continue;
                 }
                 String receiveTime = jsonObject.getString(Constants.MSG_TIME);
                 String varList4Fields = varList4FieldObject.toJSONString();
                 String varListFieldsMd5 = Md5Utils.md5(varList4FieldObject.toJSONString());
                 device.setDevNo(deviceInfo.getDevNo());
                 device.setVarListFields(varList4Fields);
-                device.setEndReceiveTime(Timestamp.valueOf(receiveTime));
-                device.setStartReceiveTime(Timestamp.valueOf(receiveTime));
+                device.setEndReceiveTime(receiveTime);
+                device.setStartReceiveTime(receiveTime);
+
                 boolean saveAble = deviceService.checkDeviceExist(stationNo, deviceInfo.getDevNo(), varListFieldsMd5) == 0L;
                 if (saveAble) {
                     deviceService.saveDevice(device);

@@ -4,8 +4,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
-
 /**
  * TODO
  *
@@ -39,12 +37,12 @@ public class Device implements Serializable {
     /**
      * 开始接受时间
      */
-    private Timestamp startReceiveTime;
+    private String startReceiveTime;
 
     /**
      * 结束接收时间
      */
-    private Timestamp endReceiveTime;
+    private String endReceiveTime;
 
     /**
      * 接受个数

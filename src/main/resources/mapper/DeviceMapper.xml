@@ -66,7 +66,7 @@
     </update>
 
     <select id="checkStationOffOnline" parameterType="java.lang.String" resultType="java.util.Map">
-        select t.isOnLine, t.lastReceiveTime
+        select t.isOnLine, DATE_FORMAT(t.lastReceiveTime, '%Y-%m-%d %T') as lastReceiveTime
         from (select f_isOnline as isOnLine, f_onlineModifyTime as lastReceiveTime
               from t_station_info
               where f_station_no = #{stationNo}
@@ -77,7 +77,7 @@
     </select>
 
     <select id="checkStationOnline" parameterType="java.lang.String" resultType="java.util.Map">
-        select t.isOnLine, t.lastReceiveTime
+        select t.isOnLine, DATE_FORMAT(t.lastReceiveTime, '%Y-%m-%d %T') as lastReceiveTime
         from (select f_isOnline as isOnLine, f_onlineModifyTime as lastReceiveTime
               from t_station_info
               where f_station_no = #{stationNo}
@@ -151,7 +151,7 @@
         from t_device
         where f_dev_no = #{devNo}
           and f_station_no = #{stationNo}
-          and f_end_receive_time &lt;= #{queryTime}
+          and f_end_receive_time &gt;= #{queryTime}
           and f_is_show = 1
         order by f_end_receive_time desc limit 0, 1
     </select>

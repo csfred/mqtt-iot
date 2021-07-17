@@ -138,6 +138,13 @@ public class DeviceServiceImpl implements DeviceService {
             if (null == retMap || retMap.isEmpty()) {
                 retMap = deviceMapper.checkStationOnline(stationNo);
             }
+            if (null == retMap && retMap.isEmpty()) {
+                return null;
+            }
+            Object timeObj = retMap.get("lastReceiveTime");
+            if (null == timeObj) {
+                return null;
+            }
             return retMap;
         } catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -334,7 +341,7 @@ public class DeviceServiceImpl implements DeviceService {
         DeviceLiveData deviceLiveData = new DeviceLiveData();
         deviceLiveData.setDevNo(devNo);
         deviceLiveData.setStationNo(stationNo);
-        LocalDateTime queryTime = LocalDateTime.now();
+        LocalDateTime queryTime = LocalDateTime.now().minusSeconds(20);
         String queryTimeStr = Timestamp.valueOf(queryTime).toString();
         deviceLiveData.setQueryTime(queryTimeStr);
         Device device = deviceMapper.getDeviceLiveData(deviceLiveData);
