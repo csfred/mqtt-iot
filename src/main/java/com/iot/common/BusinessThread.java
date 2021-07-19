@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -35,8 +36,19 @@ public class BusinessThread implements Runnable {
 
     private Boolean isDisconnected;
 
+    private List<DeviceInfo> deviceInfoUpdateList = null;
+
     @Override
     public void run() {
+        if (!CollectionUtils.isEmpty(deviceInfoUpdateList) && null != deviceService) {
+            log.error("BusinessThread deviceInfoUpdateList={}", JSON.toJSONString(deviceInfoUpdateList));
+            String updateErrorNo = deviceService.batchUpdateDeviceInfoThread(deviceInfoUpdateList);
+            if (!StringUtils.isEmpty(updateErrorNo)) {
+                updateErrorNo = updateErrorNo.substring(0, updateErrorNo.length() - 1);
+                log.error("部分更新失败 失败编号={}", updateErrorNo);
+            }
+            return;
+        }
         //业务操作
         JSONObject jsonObject = JSON.parseObject(msg);
         if (null == jsonObject || jsonObject.isEmpty()) {

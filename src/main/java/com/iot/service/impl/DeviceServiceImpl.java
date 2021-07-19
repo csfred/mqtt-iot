@@ -3,6 +3,7 @@ package com.iot.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.iot.common.ThreadPoolManager;
 import com.iot.entity.*;
 import com.iot.mapper.DeviceMapper;
 import com.iot.mqtt.MQTTListener;
@@ -46,6 +47,10 @@ public class DeviceServiceImpl implements DeviceService {
     private DeviceMapper deviceMapper;
 
     private MQTTListener mqttListener;
+
+    @Resource
+    private ThreadPoolManager threadPoolManager;
+
 
     @Value("${upload.path}")
     private String uploadPath;
@@ -309,6 +314,28 @@ public class DeviceServiceImpl implements DeviceService {
             log.error("updateDeviceInfo deviceInfo={}, errorMsg={}", JSON.toJSONString(deviceInfo), e.getMessage());
         }
         return ret;
+    }
+
+    @Override
+    public void batchUpdateDeviceInfo(List<DeviceInfo> deviceInfoList) {
+        threadPoolManager.addBatchUpdateDeviceInfoTask(deviceInfoList);
+
+    }
+
+    @Override
+    public String batchUpdateDeviceInfoThread(List<DeviceInfo> deviceInfoList) {
+        String updateErrorNo = "";
+        for (DeviceInfo deviceInfo : deviceInfoList) {
+            if (null == deviceInfo) {
+                continue;
+            }
+            long ret = updateDeviceInfo(deviceInfo);
+            if (ret < 0) {
+                updateErrorNo += deviceInfo.getDevNo();
+                updateErrorNo += ",";
+            }
+        }
+        return updateErrorNo;
     }
 
 

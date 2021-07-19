@@ -120,6 +120,20 @@ public interface DeviceService {
      */
     long updateDeviceInfo(DeviceInfo deviceInfo);
 
+    /**
+     * 批量更新设备
+     * @param deviceInfoList
+     * @return
+     */
+    void batchUpdateDeviceInfo(List<DeviceInfo> deviceInfoList);
+
+    /**
+     * 线程处理
+     * @param deviceInfoList
+     * @return
+     */
+    String batchUpdateDeviceInfoThread(List<DeviceInfo> deviceInfoList);
+
 
     /**
      * 更新相同站点相同设备参数计数

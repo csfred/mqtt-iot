@@ -1,5 +1,6 @@
 package com.iot.common;
 
+import com.iot.entity.DeviceInfo;
 import com.iot.mqtt.MQTTListener;
 import com.iot.service.DeviceService;
 import org.springframework.beans.BeansException;
@@ -8,6 +9,7 @@ import org.springframework.beans.factory.BeanFactoryAware;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.*;
@@ -86,7 +88,7 @@ public class ThreadPoolManager implements BeanFactoryAware {
     }
 
     /**
-     * 将任务1加入线程池
+     * 将任务2加入线程池
      */
     public void addDisConnectTask(String stationNo) {
         //System.out.println("此任务准备添加到线程池")
@@ -94,6 +96,17 @@ public class ThreadPoolManager implements BeanFactoryAware {
         businessThread.setDeviceService(deviceService);
         businessThread.setStationNo(stationNo);
         businessThread.setIsDisconnected(true);
+        threadPool.execute(businessThread);
+    }
+
+    /**
+     * 将批量更新设备信息加入线程池
+     */
+    public void addBatchUpdateDeviceInfoTask(List<DeviceInfo> deviceInfoList) {
+        //System.out.println("此任务准备添加到线程池")
+        BusinessThread businessThread = new BusinessThread();
+        businessThread.setDeviceService(deviceService);
+        businessThread.setDeviceInfoUpdateList(deviceInfoList);
         threadPool.execute(businessThread);
     }
 

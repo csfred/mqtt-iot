@@ -7,12 +7,15 @@ import com.iot.entity.StationInfo;
 import com.iot.service.DeviceService;
 import com.iot.service.MonitorService;
 import com.iot.utils.Result;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.util.List;
+import java.util.Map;
 
 /**
  * 报表控制器
@@ -179,6 +182,21 @@ public class BaseController {
         if (ret < 0) {
             return Result.error("更新失败，服务器异常");
         }
+        return Result.success("请求成功");
+    }
+
+    /**
+     * 根据站点编号，设备编号批量更新设备信息
+     *
+     * @return
+     */
+    @RequestMapping(value = "/batchUpdateDeviceInfo")
+    Result batchUpdateDeviceInfo(@RequestBody List<DeviceInfo> deviceInfoList) {
+        if (CollectionUtils.isEmpty(deviceInfoList)) {
+            return Result.error("参数为空");
+        }
+        System.out.println(" batchUpdateDeviceInfo deviceInfoList = " + JSON.toJSONString(deviceInfoList));
+        deviceService.batchUpdateDeviceInfo(deviceInfoList);
         return Result.success("请求成功");
     }
 

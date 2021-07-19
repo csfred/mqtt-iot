@@ -4,6 +4,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * TODO
@@ -46,4 +47,37 @@ public class DeviceInfo implements Serializable {
      * eg.. {"x":15, "y":30}
      */
     private String deviceVector;
+
+    public DeviceInfo toDeviceInfoEntity(Map<String, Object> deviceInfoMap) {
+        boolean isValid = true;
+        if (null != deviceInfoMap.get("devNo")) {
+            this.setDevNo(Long.parseLong(deviceInfoMap.get("devNo").toString()));
+        } else {
+            isValid = false;
+        }
+        if (null != deviceInfoMap.get("stationNo")) {
+            this.setStationNo(deviceInfoMap.get("stationNo").toString());
+        } else {
+            isValid = false;
+        }
+        if (null != deviceInfoMap.get("devName")) {
+            this.setDevName(deviceInfoMap.get("devName").toString());
+        }
+        if (null != deviceInfoMap.get("devVarFields")) {
+            this.setDevVarFields(deviceInfoMap.get("devVarFields").toString());
+        }
+        if (null != deviceInfoMap.get("devType")) {
+            this.setDevType(Integer.parseInt(deviceInfoMap.get("devType").toString()));
+        }
+        if (null != deviceInfoMap.get("deviceVector")) {
+            this.setDeviceVector(deviceInfoMap.get("deviceVector").toString());
+        }
+
+        if (isValid) {
+            return this;
+        } else {
+            return null;
+        }
+
+    }
 }
