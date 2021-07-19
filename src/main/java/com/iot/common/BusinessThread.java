@@ -41,7 +41,6 @@ public class BusinessThread implements Runnable {
     @Override
     public void run() {
         if (!CollectionUtils.isEmpty(deviceInfoUpdateList) && null != deviceService) {
-            log.error("BusinessThread deviceInfoUpdateList={}", JSON.toJSONString(deviceInfoUpdateList));
             String updateErrorNo = deviceService.batchUpdateDeviceInfoThread(deviceInfoUpdateList);
             if (!StringUtils.isEmpty(updateErrorNo)) {
                 updateErrorNo = updateErrorNo.substring(0, updateErrorNo.length() - 1);
@@ -132,6 +131,9 @@ public class BusinessThread implements Runnable {
             return;
         }
         List<String> allFieldList = getAllVarFieldList(varListJson, null);
+        if (CollectionUtils.isEmpty(allFieldList)) {
+            return;
+        }
         if (!allFieldList.contains(Constants.EMPTY_STR)) {
             allFieldList.add(Constants.EMPTY_STR);
         }
@@ -161,6 +163,9 @@ public class BusinessThread implements Runnable {
                 device.setEndReceiveTime(receiveTime);
                 device.setStartReceiveTime(receiveTime);
 
+                if (Constants.EMPTY_JSON_OBJECT.equalsIgnoreCase(varList4Fields)) {
+                    continue;
+                }
                 boolean saveAble = deviceService.checkDeviceExist(stationNo, deviceInfo.getDevNo(), varListFieldsMd5) == 0L;
                 if (saveAble) {
                     deviceService.saveDevice(device);

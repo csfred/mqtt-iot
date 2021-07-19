@@ -323,13 +323,27 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public String batchUpdateDeviceInfoThread(List<DeviceInfo> deviceInfoList) {
-        String updateErrorNo = "";
+        String updateErrorNo = Constants.EMPTY_STR;
         for (DeviceInfo deviceInfo : deviceInfoList) {
             if (null == deviceInfo) {
                 continue;
             }
+            if (StringUtils.isEmpty(deviceInfo.getDevName())) {
+                String deviceName = Constants.EMPTY_STR;
+                String deviceVector = deviceInfo.getDeviceVector();
+                JSONObject vectorObject = JSON.parseObject(deviceVector);
+                if (null != vectorObject && vectorObject.isEmpty()) {
+                    if (vectorObject.containsKey("title")) {
+                        deviceName = vectorObject.getString("title");
+                    } else {
+                        if (vectorObject.containsKey("deviceName")) {
+                            deviceName = vectorObject.getString("deviceName");
+                        }
+                    }
+                }
+                deviceInfo.setDevName(deviceName);
+            }
             long ret = updateDeviceInfo(deviceInfo);
-            log.error("batchUpdateDeviceInfoThread ret={}, deviceInfo={}", ret, JSON.toJSONString(deviceInfo));
             if (ret < 0) {
                 updateErrorNo += deviceInfo.getDevNo();
                 updateErrorNo += ",";
