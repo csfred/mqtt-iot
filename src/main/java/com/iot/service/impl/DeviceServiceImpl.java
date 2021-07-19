@@ -319,7 +319,6 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public void batchUpdateDeviceInfo(List<DeviceInfo> deviceInfoList) {
         threadPoolManager.addBatchUpdateDeviceInfoTask(deviceInfoList);
-
     }
 
     @Override
@@ -330,6 +329,7 @@ public class DeviceServiceImpl implements DeviceService {
                 continue;
             }
             long ret = updateDeviceInfo(deviceInfo);
+            log.error("batchUpdateDeviceInfoThread ret={}, deviceInfo={}", ret, JSON.toJSONString(deviceInfo));
             if (ret < 0) {
                 updateErrorNo += deviceInfo.getDevNo();
                 updateErrorNo += ",";

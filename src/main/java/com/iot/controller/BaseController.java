@@ -195,7 +195,6 @@ public class BaseController {
         if (CollectionUtils.isEmpty(deviceInfoList)) {
             return Result.error("参数为空");
         }
-        System.out.println(" batchUpdateDeviceInfo deviceInfoList = " + JSON.toJSONString(deviceInfoList));
         deviceService.batchUpdateDeviceInfo(deviceInfoList);
         return Result.success("请求成功");
     }
