@@ -56,6 +56,11 @@ public class StationInfo implements Serializable {
     private Integer devOpsNum;
 
     /**
+     * 站点负责人
+     */
+    private String principal;
+
+    /**
      * 联系电话
      */
     private String connectTel;

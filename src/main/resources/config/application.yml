@@ -2,7 +2,7 @@ logging:
   config: classpath:logback/logback-@spring.profiles.active@.xml
 
 server:
-  port: 8080
+  port: 8082
   servlet:
     context-path: /iot-server
 
