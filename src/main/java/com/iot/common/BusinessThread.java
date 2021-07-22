@@ -48,6 +48,9 @@ public class BusinessThread implements Runnable {
             }
             return;
         }
+        if ("OG581LL0720072800319".equals(stationNo)) {
+            log.error("msg={}", msg);
+        }
         //业务操作
         JSONObject jsonObject = JSON.parseObject(msg);
         if (null == jsonObject || jsonObject.isEmpty()) {

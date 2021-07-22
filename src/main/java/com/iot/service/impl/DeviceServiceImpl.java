@@ -103,7 +103,7 @@ public class DeviceServiceImpl implements DeviceService {
             log.error("saveStationInfo stationInfo={}, errorMsg={}", JSON.toJSONString(stationInfo), e.getMessage());
         }
         if (ret != -1) {
-            String topic = "/sys/" + stationInfo.getStationNo() + "/up";
+            String topic = "\n/sys/" + stationInfo.getStationNo() + "/up";
             try {
                 FileUtils.write(new File(mqttTopicIni), topic, StandardCharsets.UTF_8, true);
             } catch (IOException e) {
