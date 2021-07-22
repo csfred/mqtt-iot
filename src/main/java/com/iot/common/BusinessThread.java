@@ -48,9 +48,6 @@ public class BusinessThread implements Runnable {
             }
             return;
         }
-        if ("OG581LL0720072800319".equals(stationNo)) {
-            log.error("msg={}", msg);
-        }
         //业务操作
         JSONObject jsonObject = JSON.parseObject(msg);
         if (null == jsonObject || jsonObject.isEmpty()) {
@@ -107,7 +104,7 @@ public class BusinessThread implements Runnable {
         if (null != varListObject && !varListObject.isEmpty()) {
             for (Map.Entry entry : varListObject.entrySet()) {
                 if (null != entry.getKey()) {
-                    String field = entry.getKey().toString();
+                    String field = entry.getKey().toString().trim();
                     if (!allFieldList.contains(field)) {
                         allFieldList.add(field);
                     }
@@ -133,6 +130,10 @@ public class BusinessThread implements Runnable {
         if (null == varListObject || varListObject.isEmpty()) {
             return;
         }
+        JSONObject varListObjectInit = new JSONObject(8);
+        for (Map.Entry<String, Object> entry : varListObject.entrySet()) {
+            varListObjectInit.put(entry.getKey().trim(), entry.getValue());
+        }
         List<String> allFieldList = getAllVarFieldList(varListJson, null);
         if (CollectionUtils.isEmpty(allFieldList)) {
             return;
@@ -146,7 +147,7 @@ public class BusinessThread implements Runnable {
                 JSONObject varList4FieldObject = new JSONObject(8);
                 boolean isNullData = false;
                 for (String key : deviceInfoFieldList) {
-                    Object filedVal = varListObject.get(key);
+                    Object filedVal = varListObjectInit.get(key);
                     isNullData = (null != filedVal && Constants.NULL_STR.equalsIgnoreCase(filedVal.toString()));
                     if (isNullData) {
                         break;

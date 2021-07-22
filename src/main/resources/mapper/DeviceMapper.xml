@@ -227,7 +227,8 @@
                f_station_no     as stationNo,
                f_dev_name       as devName,
                f_dev_type       as devType,
-               f_dev_var_fields as devVarFields
+               f_dev_var_fields as devVarFields,
+               f_dev_vector     as deviceVector
         from t_device_info
         where f_station_no = #{stationNo}
     </select>
