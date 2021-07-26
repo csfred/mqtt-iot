@@ -187,4 +187,11 @@ public interface DeviceMapper {
      * @return
      */
     Device getDeviceLiveData(DeviceLiveData deviceLiveData);
+
+    /**
+     * 更新之前的设备数据为历史数据
+     *
+     * @param devNo
+     */
+    void updateToHistory(Long devNo);
 }

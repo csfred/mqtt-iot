@@ -15,7 +15,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
 import java.util.List;
-import java.util.Map;
 
 /**
  * 报表控制器
@@ -211,7 +210,7 @@ public class BaseController {
                              @RequestParam("deviceNo") Long deviceNo) {
         Object data;
         try {
-            data = deviceService.getDeviceLiveData(stationNo, deviceNo);
+            data = deviceService.getDeviceLiveData(stationNo, deviceNo, false);
         } catch (Exception e) {
             return Result.error(e.getMessage());
         }

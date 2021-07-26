@@ -2,6 +2,7 @@ package com.iot.common;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.iot.entity.Constants;
 import com.iot.entity.Device;
 import com.iot.entity.DeviceInfo;
@@ -14,10 +15,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Data
 @Slf4j
@@ -120,11 +118,28 @@ public class BusinessThread implements Runnable {
         return allFieldList;
     }
 
+    public static void main(String[] args) {
+//        List<String> deviceAllVarKeys = Arrays.asList("变量1", "变量4", "var1", "var6");
+//        Collections.sort(deviceAllVarKeys);
+//        List<String> lastDeviceAllVarKeys = Arrays.asList("var1", "变量4", "变量10", "var6");
+//        Collections.sort(lastDeviceAllVarKeys);
+//        if (deviceAllVarKeys.equals(lastDeviceAllVarKeys)) {
+//            System.out.println("yes");
+//        } else {
+//            System.out.println("no");
+//        }
+        Map<String, Object> testMap = new HashMap<>(8);
+        testMap.put("aaa", 110);
+        testMap.put("bbb", 112);
+        testMap.put("ccc", null);
+        testMap.put("ddd", 114);
+        System.out.println(JSON.toJSONString(testMap, SerializerFeature.WriteMapNullValue));
+    }
+
     private void saveDevice(JSONObject jsonObject) {
         Device device = new Device();
         String stationNo = jsonObject.getString(Constants.STATION_NO_KEY);
         device.setStationNo(stationNo);
-
         String varListJson = jsonObject.getString(Constants.MSG_VAR_LIST);
         JSONObject varListObject = JSON.parseObject(varListJson);
         if (null == varListObject || varListObject.isEmpty()) {
@@ -142,39 +157,55 @@ public class BusinessThread implements Runnable {
             allFieldList.add(Constants.EMPTY_STR);
         }
         for (DeviceInfo deviceInfo : deviceInfoList) {
+            List<String> deviceAllVarKeys = new ArrayList<>(16);
             List<String> deviceInfoFieldList = JSON.parseArray(deviceInfo.getDevVarFields(), String.class);
-            if (allFieldList.containsAll(deviceInfoFieldList)) {
-                JSONObject varList4FieldObject = new JSONObject(8);
-                boolean isNullData = false;
-                for (String key : deviceInfoFieldList) {
-                    Object filedVal = varListObjectInit.get(key);
-                    isNullData = (null != filedVal && Constants.NULL_STR.equalsIgnoreCase(filedVal.toString()));
-                    if (isNullData) {
-                        break;
-                    }
-                    if (null != filedVal) {
-                        varList4FieldObject.put(key, filedVal);
-                    }
+            Map<String, Object> varList4FieldObject = new HashMap<>(8);
+            boolean isAllNullData = true;
+            for (String key : deviceInfoFieldList) {
+                Object filedVal = varListObjectInit.get(key);
+                if (isAllNullData) {
+                    isAllNullData = (null == filedVal || Constants.NULL_STR.equalsIgnoreCase(filedVal.toString()));
                 }
-                if (isNullData) {
-                    continue;
+                if (null != filedVal) {
+                    varList4FieldObject.put(key, filedVal);
+                } else {
+                    varList4FieldObject.put(key, null);
                 }
-                String receiveTime = jsonObject.getString(Constants.MSG_TIME);
-                String varList4Fields = varList4FieldObject.toJSONString();
-                String varListFieldsMd5 = Md5Utils.md5(varList4FieldObject.toJSONString());
-                device.setDevNo(deviceInfo.getDevNo());
-                device.setVarListFields(varList4Fields);
-                device.setEndReceiveTime(receiveTime);
-                device.setStartReceiveTime(receiveTime);
+                deviceAllVarKeys.add(key);
+            }
+            if (isAllNullData) {
+                continue;
+            }
+            String receiveTime = jsonObject.getString(Constants.MSG_TIME);
+            String varList4Fields = JSON.toJSONString(varList4FieldObject, SerializerFeature.WriteMapNullValue);
+            String varListFieldsMd5 = Md5Utils.md5(varList4Fields);
+            device.setDevNo(deviceInfo.getDevNo());
+            device.setVarListFields(varList4Fields);
+            device.setEndReceiveTime(receiveTime);
+            device.setStartReceiveTime(receiveTime);
 
-                if (Constants.EMPTY_JSON_OBJECT.equalsIgnoreCase(varList4Fields)) {
-                    continue;
-                }
-                boolean saveAble = deviceService.checkDeviceExist(stationNo, deviceInfo.getDevNo(), varListFieldsMd5) == 0L;
-                if (saveAble) {
+            if (Constants.EMPTY_JSON_OBJECT.equalsIgnoreCase(varList4Fields)) {
+                continue;
+            }
+            boolean notSaveAble = deviceService.checkDeviceExist(stationNo, deviceInfo.getDevNo(), varListFieldsMd5) > 0L;
+            if (notSaveAble) {
+                deviceService.updateSameDeviceCounter(receiveTime, stationNo, varListFieldsMd5);
+            } else {
+                Device lastDevice = deviceService.getDeviceLiveData(stationNo, deviceInfo.getDevNo(), true);
+                if (null == lastDevice) {
                     deviceService.saveDevice(device);
                 } else {
-                    deviceService.updateSameDeviceCounter(receiveTime, stationNo, varListFieldsMd5);
+                    String lastVarList4Fields = lastDevice.getVarListFields();
+                    JSONObject lastVarList4FieldsObject = JSON.parseObject(lastVarList4Fields);
+                    Collections.sort(deviceAllVarKeys);
+                    List<String> lastDeviceAllVarKeys = new ArrayList<String>(lastVarList4FieldsObject.keySet());
+                    Collections.sort(lastDeviceAllVarKeys);
+                    boolean isEqual = deviceAllVarKeys.equals(lastDeviceAllVarKeys);
+                    if (isEqual) {
+                        deviceService.saveDevice(device);
+                    } else {
+                        deviceService.updateToHistory(deviceInfo.getDevNo());
+                    }
                 }
             }
         }

@@ -238,4 +238,10 @@
         from t_device_type;
     </select>
 
+    <update id="updateToHistory" parameterType="java.lang.Long">
+        update t_device
+        set f_is_show = 0
+        where f_dev_no = #{devNo}
+    </update>
+
 </mapper>

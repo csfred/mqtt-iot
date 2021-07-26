@@ -122,6 +122,7 @@ public interface DeviceService {
 
     /**
      * 批量更新设备
+     *
      * @param deviceInfoList
      * @return
      */
@@ -129,6 +130,7 @@ public interface DeviceService {
 
     /**
      * 线程处理
+     *
      * @param deviceInfoList
      * @return
      */
@@ -178,9 +180,10 @@ public interface DeviceService {
      *
      * @param stationNo
      * @param devNo
+     * @param isSelfCheck
      * @return
      */
-    Device getDeviceLiveData(String stationNo, Long devNo);
+    Device getDeviceLiveData(String stationNo, Long devNo, boolean isSelfCheck);
 
     /**
      * 文件上传
@@ -197,5 +200,12 @@ public interface DeviceService {
      * @return
      */
     boolean downloadBinaryFile(String filePath, HttpServletResponse response);
+
+    /**
+     * 将旧的设备的是否显示变更为不显示，成为历史
+     *
+     * @param devNo
+     */
+    void updateToHistory(Long devNo);
 
 }

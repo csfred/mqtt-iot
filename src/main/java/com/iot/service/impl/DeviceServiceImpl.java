@@ -103,9 +103,11 @@ public class DeviceServiceImpl implements DeviceService {
             log.error("saveStationInfo stationInfo={}, errorMsg={}", JSON.toJSONString(stationInfo), e.getMessage());
         }
         if (ret != -1) {
-            String topic = "\n/sys/" + stationInfo.getStationNo() + "/up";
+            String topic = "/sys/" + stationInfo.getStationNo() + "/up";
             try {
+                File topicFile = new File(mqttTopicIni);
                 FileUtils.write(new File(mqttTopicIni), topic, StandardCharsets.UTF_8, true);
+                FileUtils.write(topicFile, "\n", true);
             } catch (IOException e) {
                 log.error(e.getMessage());
             }
@@ -378,13 +380,19 @@ public class DeviceServiceImpl implements DeviceService {
     }
 
     @Override
-    public Device getDeviceLiveData(String stationNo, Long devNo) {
+    public Device getDeviceLiveData(String stationNo, Long devNo, boolean isSelfCheck) {
         DeviceLiveData deviceLiveData = new DeviceLiveData();
         deviceLiveData.setDevNo(devNo);
         deviceLiveData.setStationNo(stationNo);
-        LocalDateTime queryTime = LocalDateTime.now().minusSeconds(20);
-        String queryTimeStr = Timestamp.valueOf(queryTime).toString();
+        String queryTimeStr;
+        if (isSelfCheck) {
+            queryTimeStr = "1900-01-01 00:00:00";
+        } else {
+            LocalDateTime queryTime = LocalDateTime.now().minusSeconds(20);
+            queryTimeStr = Timestamp.valueOf(queryTime).toString();
+        }
         deviceLiveData.setQueryTime(queryTimeStr);
+
         Device device = deviceMapper.getDeviceLiveData(deviceLiveData);
         return device;
     }
@@ -470,5 +478,10 @@ public class DeviceServiceImpl implements DeviceService {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void updateToHistory(Long devNo) {
+        deviceMapper.updateToHistory(devNo);
     }
 }
