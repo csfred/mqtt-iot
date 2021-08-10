@@ -219,7 +219,7 @@
         where MD5(f_var_list_fields) = #{varList4FieldsMd5}
           and f_station_no = #{stationNo}
           and f_dev_no = #{devNo}
-          and f_is_show = 1;
+          and f_is_show = #{isShow};
     </select>
 
     <select id="getDeviceInfoAll" parameterType="java.lang.String" resultType="com.iot.entity.DeviceInfo">
@@ -244,4 +244,12 @@
         where f_dev_no = #{devNo}
     </update>
 
+    <update id="resumeUpdateToHistory" parameterType="java.lang.Object">
+        update t_device
+        set f_is_show = 1
+        where MD5(f_var_list_fields) = #{varList4FieldsMd5}
+          and f_station_no = #{stationNo}
+          and f_dev_no = #{devNo}
+          and f_is_show = 0;
+    </update>
 </mapper>

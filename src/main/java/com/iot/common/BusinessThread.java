@@ -181,10 +181,13 @@ public class BusinessThread implements Runnable {
             String varListFieldsMd5 = Md5Utils.md5(varList4Fields);
             device.setDevNo(deviceInfo.getDevNo());
             device.setVarListFields(varList4Fields);
+            device.setVarListFieldsMd5(varListFieldsMd5);
             device.setEndReceiveTime(receiveTime);
             device.setStartReceiveTime(receiveTime);
 
-            if (Constants.EMPTY_JSON_OBJECT.equalsIgnoreCase(varList4Fields)) {
+            if (Constants.EMPTY_JSON_OBJECT.equalsIgnoreCase(varList4Fields) ||
+                    StringUtils.isEmpty(varListFieldsMd5) ||
+                    Constants.NULL_STR.equalsIgnoreCase(varListFieldsMd5)) {
                 continue;
             }
             boolean notSaveAble = deviceService.checkDeviceExist(stationNo, deviceInfo.getDevNo(), varListFieldsMd5) > 0L;

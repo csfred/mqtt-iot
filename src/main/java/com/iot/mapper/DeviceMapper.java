@@ -158,11 +158,24 @@ public interface DeviceMapper {
      * @param varList4FieldsMd5 参数，值 MD5
      * @param stationNo         站点编号
      * @param devNo             设备编号
+     * @param isShow            是否显示
      * @return
      */
     Long checkDeviceExist(@Param("stationNo") String stationNo,
                           @Param("devNo") Long devNo,
+                          @Param("isShow") Integer isShow,
                           @Param("varList4FieldsMd5") String varList4FieldsMd5);
+
+    /**
+     * 将历史数据恢复
+     * @param stationNo
+     * @param devNo
+     * @param varList4FieldsMd5
+     * @return
+     */
+    Long resumeUpdateToHistory(@Param("stationNo") String stationNo,
+                               @Param("devNo") Long devNo,
+                               @Param("varList4FieldsMd5") String varList4FieldsMd5);
 
     /**
      * 获取站点下所有设备种类信息

@@ -264,7 +264,14 @@ public class DeviceServiceImpl implements DeviceService {
     @Override
     public void saveDevice(Device param) {
         try {
-            deviceMapper.saveDevice(param);
+            //传入的设备信息是历史数据时，恢复历史数据
+            Long total = deviceMapper.checkDeviceExist(param.getStationNo(), param.getDevNo(), 0, param.getVarListFieldsMd5());
+            if (total > 0L) {
+                deviceMapper.resumeUpdateToHistory(param.getStationNo(), param.getDevNo(), param.getVarListFieldsMd5());
+                deviceMapper.updateSameDeviceCounter(param.getEndReceiveTime(), param.getStationNo(), param.getVarListFieldsMd5());
+            } else {
+                deviceMapper.saveDevice(param);
+            }
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -365,7 +372,7 @@ public class DeviceServiceImpl implements DeviceService {
 
     @Override
     public Long checkDeviceExist(String stationNo, Long devNo, String varListFieldsMd5) {
-        return deviceMapper.checkDeviceExist(stationNo, devNo, varListFieldsMd5);
+        return deviceMapper.checkDeviceExist(stationNo, devNo, 1, varListFieldsMd5);
     }
 
 

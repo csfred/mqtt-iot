@@ -266,7 +266,6 @@ public class BaseController {
      */
     @RequestMapping("/updateMonitorInfo")
     Result updateMonitorInfo(@RequestBody MonitorInfo monitorInfo) {
-
         long ret = monitorService.updateMonitorInfo(monitorInfo);
         if (ret < 0) {
             return Result.error("更新摄像机信息失败");
