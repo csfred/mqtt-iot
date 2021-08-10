@@ -106,6 +106,9 @@ public class MonitorServiceImpl implements MonitorService {
                     childrenObject.put("channelId", monitorInfo.getChannelId());
                     childrenObject.put("url", monitorInfo.getUrl());
                     childrenObject.put("type", monitorInfo.getType());
+                    childrenObject.put("remarks1", monitorInfo.getRemarks1());
+                    childrenObject.put("remarks2", monitorInfo.getRemarks2());
+                    childrenObject.put("remarks3", monitorInfo.getRemarks3());
                     childrenList.add(childrenObject);
                 }
                 jsonObject.put("children", childrenList);
